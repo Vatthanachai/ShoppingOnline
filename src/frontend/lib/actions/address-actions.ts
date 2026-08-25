@@ -86,3 +86,19 @@ export async function deleteAddressAction(_prevState: ActionState, formData: For
   revalidatePath("/account/addresses");
   return {};
 }
+
+export async function setDefaultAddressAction(addressId: number): Promise<ActionState> {
+  try {
+    const client = await getApiClient();
+    await client.setDefaultAddress(addressId);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return { error: error.message };
+    }
+    return { error: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" };
+  }
+
+  revalidatePath("/account/addresses");
+  revalidatePath("/checkout");
+  return {};
+}

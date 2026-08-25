@@ -1,6 +1,8 @@
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddressDialog } from "@/components/addresses/address-dialog";
 import { DeleteAddressDialog } from "@/components/addresses/delete-address-dialog";
+import { SetDefaultAddressButton } from "@/components/addresses/set-default-address-button";
 import { withAuthRedirect } from "@/lib/session";
 
 export default async function AddressesPage() {
@@ -27,16 +29,22 @@ export default async function AddressesPage() {
             <Card key={address.shipping_address_id}>
               <CardContent className="flex items-start justify-between gap-4">
                 <div className="text-sm">
-                  <p className="font-medium">{address.address_line1}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">{address.address_line1}</p>
+                    {address.is_default && <Badge>ค่าเริ่มต้น</Badge>}
+                  </div>
                   {address.address_line2 && <p className="text-muted-foreground">{address.address_line2}</p>}
                   <p className="text-muted-foreground">
                     {[address.city, address.state, address.postal_code].filter(Boolean).join(" ")}
                   </p>
                   <p className="text-muted-foreground">{address.country}</p>
                 </div>
-                <div className="flex shrink-0 gap-2">
-                  <AddressDialog mode="edit" address={address} />
-                  <DeleteAddressDialog addressId={address.shipping_address_id} />
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <div className="flex gap-2">
+                    <AddressDialog mode="edit" address={address} />
+                    <DeleteAddressDialog addressId={address.shipping_address_id} />
+                  </div>
+                  {!address.is_default && <SetDefaultAddressButton addressId={address.shipping_address_id} />}
                 </div>
               </CardContent>
             </Card>
