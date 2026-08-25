@@ -67,6 +67,13 @@ public class UserService(
         var user = await DbSet.FirstOrDefaultAsync(u => u.UserId == userId.Value);
         if (user is null) return new Service404Response();
 
+        // Admins manage the store - there's no one else to hand off to, so they can't
+        // self-service deactivate the way a customer can.
+        if (user.Role == UserRole.Admin)
+        {
+            return new Service403Response("Admin accounts cannot be deactivated.");
+        }
+
         var (hash, salt, _) = encryptionService.Extract(user.PasswordHash);
         if (!encryptionService.VerifyPassword(request.CurrentPassword, hash, salt))
         {
