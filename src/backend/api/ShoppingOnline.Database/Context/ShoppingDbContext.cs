@@ -11,9 +11,13 @@ public class ShoppingDbContext(DbContextOptions<ShoppingDbContext> options) : Ba
     {
         modelBuilder.ApplyConfiguration(new OrderTableConfig());
         modelBuilder.ApplyConfiguration(new OrderItemTableConfig());
+        modelBuilder.ApplyConfiguration(new OrderItemAllocationTableConfig());
 
         modelBuilder.ApplyConfiguration(new ProductTableConfig());
         modelBuilder.ApplyConfiguration(new ProductCategoryTableConfig());
+
+        modelBuilder.ApplyConfiguration(new PurchaseOrderTableConfig());
+        modelBuilder.ApplyConfiguration(new PurchaseOrderItemTableConfig());
 
         modelBuilder.ApplyConfiguration(new ShippingAddressTableConfig());
         modelBuilder.ApplyConfiguration(new StockTableConfig());

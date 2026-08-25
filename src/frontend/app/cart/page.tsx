@@ -28,7 +28,7 @@ export default function CartPage() {
 
       <div className="rounded-xl border px-4">
         {items.map((item) => (
-          <CartLineItem key={`${item.product_id}-${item.vendor_id}`} item={item} />
+          <CartLineItem key={item.product_id} item={item} />
         ))}
       </div>
 

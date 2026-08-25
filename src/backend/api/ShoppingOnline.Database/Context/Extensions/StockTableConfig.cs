@@ -11,6 +11,10 @@ public class StockTableConfig : IEntityTypeConfiguration<Stock>
     {
         builder.ToTable($"tb_{nameof(Stock).ToLower()}");
         builder.HasKey(k => k.StockId);
+        builder.HasOne(s => s.PurchaseOrderItem)
+            .WithMany(i => i.ReceivedLots)
+            .HasForeignKey(s => s.PurchaseOrderItemId)
+            .OnDelete(DeleteBehavior.SetNull);
         builder.Property(p => p.CreatedBy)
             .IsRequired()
             .HasMaxLength(100);

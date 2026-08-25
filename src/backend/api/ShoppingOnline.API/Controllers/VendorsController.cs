@@ -1,5 +1,6 @@
 using Asp.Versioning;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using ShoppingOnline.Component.Abstractions.Controllers;
@@ -47,6 +48,7 @@ public class VendorsController(
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateVendorAsync([FromBody] CreateVendorRequest request)
         => ReturnResponseWithHttpStatus(await createVendorHandler.Handler(request));
@@ -57,6 +59,7 @@ public class VendorsController(
     /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateVendorAsync(int id, [FromBody] UpdateVendorRequest request)
     {
@@ -69,6 +72,7 @@ public class VendorsController(
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeactivateVendorAsync(int id)
         => ReturnResponseWithHttpStatus(

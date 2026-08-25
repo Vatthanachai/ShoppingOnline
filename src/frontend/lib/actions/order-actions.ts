@@ -16,14 +16,21 @@ export type CancelOrderState = { error?: string };
  * Places an order from the client-side cart. Invoked directly (not via <form action>)
  * since the payload is cart state held in localStorage, not form fields.
  */
-export async function createOrderAction(items: CreateOrderItemRequest[]): Promise<CreateOrderState> {
+export async function createOrderAction(
+  shippingAddressId: number,
+  items: CreateOrderItemRequest[],
+): Promise<CreateOrderState> {
   if (items.length === 0) {
     return { ok: false, error: "ตะกร้าสินค้าว่างเปล่า" };
   }
 
+  if (!shippingAddressId) {
+    return { ok: false, error: "กรุณาเลือกที่อยู่จัดส่ง" };
+  }
+
   try {
     const client = await getApiClient();
-    const order = await client.createOrder({ items });
+    const order = await client.createOrder({ shipping_address_id: shippingAddressId, items });
     return { ok: true, order };
   } catch (error) {
     if (error instanceof ApiError) {

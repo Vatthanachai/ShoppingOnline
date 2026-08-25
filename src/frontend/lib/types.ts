@@ -79,6 +79,85 @@ export interface Category {
   is_active: boolean;
 }
 
+export interface CategoryRequest {
+  category_name: string;
+  description: string;
+}
+
+// ----- Vendors -----
+
+export interface Vendor {
+  vendor_id: number;
+  vendor_name: string;
+  contact_person: string;
+  email: string;
+  phone: string;
+  is_active: boolean;
+}
+
+// ----- Purchase orders (admin) -----
+
+export type PurchaseOrderStatus = "Draft" | "Sent" | "PartiallyReceived" | "Received" | "Cancelled";
+
+export interface PurchaseOrderItem {
+  purchase_order_item_id: number;
+  product_id: number;
+  product_name: string;
+  product_code: string;
+  quantity_ordered: number;
+  quantity_received: number;
+  unit_cost_quoted: number | null;
+}
+
+export interface PurchaseOrderSummary {
+  purchase_order_id: number;
+  vendor_id: number;
+  vendor_name: string;
+  status: PurchaseOrderStatus;
+  created_on: string;
+  sent_on: string | null;
+  item_count: number;
+}
+
+export interface PurchaseOrderDetail {
+  purchase_order_id: number;
+  vendor_id: number;
+  vendor_name: string;
+  vendor_email: string;
+  status: PurchaseOrderStatus;
+  created_on: string;
+  sent_on: string | null;
+  items: PurchaseOrderItem[];
+}
+
+export interface CreatePurchaseOrderItemRequest {
+  product_id: number;
+  quantity: number;
+  unit_cost_quoted?: number;
+}
+
+export interface CreatePurchaseOrderRequest {
+  vendor_id: number;
+  items: CreatePurchaseOrderItemRequest[];
+}
+
+export interface ReceivePurchaseOrderLineRequest {
+  purchase_order_item_id: number;
+  quantity_received: number;
+  unit_cost: number;
+}
+
+export interface ReceivePurchaseOrderRequest {
+  lines: ReceivePurchaseOrderLineRequest[];
+}
+
+export interface VendorRequest {
+  vendor_name: string;
+  contact_person: string;
+  email: string;
+  phone: string;
+}
+
 // ----- Products -----
 
 export interface Product {
@@ -91,10 +170,25 @@ export interface Product {
   product_name: string;
   description: string;
   is_active: boolean;
-  min_price: number | null;
+  sell_price: number;
+  tax_rate_percent: number;
+  price_with_tax: number;
+  available_quantity: number;
+  image_path: string | null;
 }
 
-// ----- Stocks -----
+export interface ProductRequest {
+  product_category_id: number;
+  vendor_id: number;
+  product_code: string;
+  product_name: string;
+  description: string;
+  image_path?: string;
+  sell_price: number;
+  tax_rate_percent: number;
+}
+
+// ----- Stocks (read-only inventory view) -----
 
 export interface Stock {
   stock_id: number;
@@ -103,7 +197,21 @@ export interface Stock {
   vendor_id: number;
   vendor_name: string;
   quantity: number;
-  price: number;
+  cost: number;
+  received_on: string;
+  purchase_order_id: number | null;
+}
+
+// ----- Users (admin) -----
+
+export interface AdminUser {
+  user_id: number;
+  name: string;
+  email: string;
+  phone: string;
+  role: UserRole;
+  is_active: boolean;
+  created_on: string;
 }
 
 // ----- Shipping addresses -----
@@ -140,22 +248,28 @@ export interface OrderItem {
   order_item_id: number;
   product_id: number;
   product_name: string;
-  vendor_id: number;
-  vendor_name: string;
   quantity: number;
-  price: number;
+  unit_price: number;
+  tax_rate_percent: number;
+  line_total: number;
 }
 
 export interface OrderDetail extends OrderSummary {
+  shipping_address_line1: string;
+  shipping_address_line2: string;
+  shipping_city: string;
+  shipping_state: string;
+  shipping_postal_code: string;
+  shipping_country: string;
   items: OrderItem[];
 }
 
 export interface CreateOrderItemRequest {
   product_id: number;
-  vendor_id: number;
   quantity: number;
 }
 
 export interface CreateOrderRequest {
+  shipping_address_id: number;
   items: CreateOrderItemRequest[];
 }

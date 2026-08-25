@@ -3,6 +3,5 @@ namespace ShoppingOnline.Model.Requests.Orders;
 public class CreateOrderItemRequest
 {
     public int ProductId { get; set; }
-    public int VendorId { get; set; }
     public int Quantity { get; set; }
 }

@@ -48,15 +48,17 @@ export default async function AccountPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-destructive">โซนอันตราย</CardTitle>
-          <CardDescription>การปิดใช้งานบัญชีจะทำให้คุณไม่สามารถเข้าสู่ระบบได้อีก</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DeactivateDialog />
-        </CardContent>
-      </Card>
+      {profile.role !== "Admin" && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-destructive">โซนอันตราย</CardTitle>
+            <CardDescription>การปิดใช้งานบัญชีจะทำให้คุณไม่สามารถเข้าสู่ระบบได้อีก</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DeactivateDialog />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

@@ -18,10 +18,16 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
     }
 
 
+    /// <summary>
+    /// Fixed local-dev password for the seeded admin account, so it stays known/log-in-able
+    /// across restarts instead of a fresh random one that's only ever printed once. Dev-only
+    /// mockup data - never used for a real deployment's admin credentials.
+    /// </summary>
+    private const string DefaultAdminPassword = "Admin@12345";
+
     private void UserInitialized()
     {
-        var strPassword = encryptionService.PasswordGenerate();
-        var hash = encryptionService.HashPassword(strPassword, out byte[] salt);
+        var hash = encryptionService.HashPassword(DefaultAdminPassword, out byte[] salt);
         var saltHex = Convert.ToHexString(salt);
         var combinedPasswordHash = encryptionService.CombinePasswordComponents(hash, saltHex);
 
@@ -31,7 +37,7 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
 
         if (!context.Set<User>().Any(u => u.Email == adminEmail))
         {
-            logger.Information($"Default admin user initialized via email: {adminEmail}, password: {strPassword}");
+            logger.Information($"Default admin user initialized via email: {adminEmail}, password: {DefaultAdminPassword}");
 
             context.Set<User>().Add(
                 new User
@@ -200,7 +206,7 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
             }
 
             var category = categories[seed.CategoryName];
-            var (primaryVendorName, _, _) = seed.Stocks[0];
+            var (primaryVendorName, _, sellPrice) = seed.Stocks[0];
             var primaryVendor = vendors[primaryVendorName];
 
             var product = new Product
@@ -211,12 +217,16 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
                 ProductName = seed.ProductName,
                 Description = seed.Description,
                 ImagePath = seed.ImagePath,
+                SellPrice = sellPrice,
                 CreatedBy = "dbMigration",
                 CreatedOn = DateTime.UtcNow,
                 IsActive = true,
             };
             context.Set<Product>().Add(product);
 
+            // Seed lots as if received a day apart, oldest vendor first, so FIFO ordering has
+            // something meaningful to demonstrate out of the box.
+            var receivedOn = DateTime.UtcNow.AddDays(-seed.Stocks.Length);
             foreach (var (vendorName, quantity, price) in seed.Stocks)
             {
                 context.Set<Stock>().Add(new Stock
@@ -224,10 +234,11 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
                     Product = product,
                     Vendor = vendors[vendorName],
                     Quantity = quantity,
-                    Price = price,
+                    Cost = Math.Round(price * 0.8m, 2),
                     CreatedBy = "dbMigration",
-                    CreatedOn = DateTime.UtcNow,
+                    CreatedOn = receivedOn,
                 });
+                receivedOn = receivedOn.AddDays(1);
             }
         }
     }

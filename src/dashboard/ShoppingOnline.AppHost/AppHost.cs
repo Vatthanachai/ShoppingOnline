@@ -19,7 +19,7 @@ var frontend = builder.AddJavaScriptApp("shoppingonline-frontend", "../../fronte
     .WithPnpm()
     .WithHttpEndpoint(port: 3000, env: "PORT")
     .WithReference(webapi)
-    .WithEnvironment("API_URL", webapi.GetEndpoint("http"))
+    .WithEnvironment("API_URL", webapi.GetEndpoint("https"))
     .WaitFor(webapi);
 
 

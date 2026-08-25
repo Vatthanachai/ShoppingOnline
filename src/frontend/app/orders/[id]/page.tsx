@@ -39,6 +39,18 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <Badge variant={STATUS_BADGE_VARIANT[order.status]}>{formatOrderStatus(order.status)}</Badge>
       </div>
 
+      <div className="rounded-xl border p-4">
+        <h2 className="mb-2 text-sm font-semibold text-muted-foreground">ที่อยู่จัดส่ง</h2>
+        <p className="text-sm">
+          {order.shipping_address_line1}
+          {order.shipping_address_line2 && `, ${order.shipping_address_line2}`}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {[order.shipping_city, order.shipping_state, order.shipping_postal_code].filter(Boolean).join(" ")}
+        </p>
+        <p className="text-sm text-muted-foreground">{order.shipping_country}</p>
+      </div>
+
       <div className="rounded-xl border px-4">
         {order.items.map((item) => (
           <div
@@ -47,12 +59,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           >
             <div className="flex flex-col gap-0.5">
               <span className="font-medium">{item.product_name}</span>
-              <span className="text-sm text-muted-foreground">ผู้ขาย: {item.vendor_name}</span>
               <span className="text-sm text-muted-foreground">
-                {formatCurrency(item.price)} x {item.quantity}
+                {formatCurrency(item.unit_price)} x {item.quantity} (รวมภาษี {item.tax_rate_percent}%)
               </span>
             </div>
-            <span className="font-medium">{formatCurrency(item.price * item.quantity)}</span>
+            <span className="font-medium">{formatCurrency(item.line_total)}</span>
           </div>
         ))}
       </div>

@@ -37,6 +37,11 @@ public class ProductCategoryService(
                 s.Description.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase));
         }
 
+        if (!request.IncludeInactive)
+        {
+            predicate = predicate.And(s => s.IsActive);
+        }
+
         var query = DbContext.Set<ProductCategory>().ProjectToType<GetCategoriesResponse>().Where(predicate);
 
         query = request.IsOrderDescending

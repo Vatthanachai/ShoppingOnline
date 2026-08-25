@@ -45,6 +45,11 @@ public class ProductService(
             predicate = predicate.And(p => p.VendorId == request.VendorId.Value);
         }
 
+        if (!request.IncludeInactive)
+        {
+            predicate = predicate.And(p => p.IsActive);
+        }
+
         var baseQuery = DbSet.Where(predicate);
 
         var query = MapToResponse(baseQuery);
@@ -99,6 +104,8 @@ public class ProductService(
             ProductName = request.ProductName,
             Description = request.Description,
             ImagePath = request.ImagePath,
+            SellPrice = request.SellPrice,
+            TaxRatePercent = request.TaxRatePercent,
             CreatedBy = "system",
             CreatedOn = DateTime.UtcNow,
             IsActive = true,
@@ -145,6 +152,8 @@ public class ProductService(
         product.ProductName = request.ProductName;
         product.Description = request.Description;
         product.ImagePath = request.ImagePath;
+        product.SellPrice = request.SellPrice;
+        product.TaxRatePercent = request.TaxRatePercent;
         product.ModifiedBy = "system";
         product.ModifiedDate = DateTime.UtcNow;
 
@@ -188,7 +197,10 @@ public class ProductService(
             ProductName = p.ProductName,
             Description = p.Description,
             IsActive = p.IsActive,
-            MinPrice = p.Stocks.Where(s => s.Quantity > 0).Select(s => (decimal?)s.Price).Min(),
+            SellPrice = p.SellPrice,
+            TaxRatePercent = p.TaxRatePercent,
+            PriceWithTax = Math.Round(p.SellPrice * (1 + p.TaxRatePercent / 100), 2),
+            AvailableQuantity = p.Stocks.Sum(s => (int?)s.Quantity) ?? 0,
             ImagePath = p.ImagePath,
         });
 }

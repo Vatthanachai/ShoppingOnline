@@ -48,6 +48,30 @@ namespace ShoppingOnline.Database.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ShippingAddressLine1")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShippingAddressLine2")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShippingCity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShippingCountry")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShippingPostalCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ShippingState")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -92,17 +116,17 @@ namespace ShoppingOnline.Database.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("VendorId")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("TaxRatePercent")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
 
                     b.HasKey("OrderItemId");
 
@@ -110,9 +134,38 @@ namespace ShoppingOnline.Database.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.ToTable("tb_orderitem", (string)null);
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.OrderItemAllocation", b =>
+                {
+                    b.Property<int>("OrderItemAllocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemAllocationId"));
+
+                    b.Property<int>("OrderItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("VendorId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OrderItemAllocationId");
+
+                    b.HasIndex("OrderItemId");
+
+                    b.HasIndex("StockId");
+
                     b.HasIndex("VendorId");
 
-                    b.ToTable("tb_orderitem", (string)null);
+                    b.ToTable("tb_orderitemallocation", (string)null);
                 });
 
             modelBuilder.Entity("ShoppingOnline.Model.Entities.Product", b =>
@@ -159,6 +212,12 @@ namespace ShoppingOnline.Database.Migrations
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("SellPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("TaxRatePercent")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("VendorId")
                         .HasColumnType("integer");
@@ -209,6 +268,79 @@ namespace ShoppingOnline.Database.Migrations
                     b.HasKey("ProductCategoryId");
 
                     b.ToTable("tb_productcategory", (string)null);
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.PurchaseOrder", b =>
+                {
+                    b.Property<int>("PurchaseOrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PurchaseOrderId"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("SentOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("VendorId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PurchaseOrderId");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("tb_purchaseorder", (string)null);
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.PurchaseOrderItem", b =>
+                {
+                    b.Property<int>("PurchaseOrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PurchaseOrderItemId"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PurchaseOrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityOrdered")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityReceived")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("UnitCostQuoted")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("PurchaseOrderItemId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.ToTable("tb_purchaseorderitem", (string)null);
                 });
 
             modelBuilder.Entity("ShoppingOnline.Model.Entities.ShippingAddress", b =>
@@ -276,6 +408,9 @@ namespace ShoppingOnline.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StockId"));
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -291,10 +426,10 @@ namespace ShoppingOnline.Database.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
                     b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PurchaseOrderItemId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Quantity")
@@ -306,6 +441,8 @@ namespace ShoppingOnline.Database.Migrations
                     b.HasKey("StockId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseOrderItemId");
 
                     b.HasIndex("VendorId");
 
@@ -444,15 +581,34 @@ namespace ShoppingOnline.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShoppingOnline.Model.Entities.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.OrderItemAllocation", b =>
+                {
+                    b.HasOne("ShoppingOnline.Model.Entities.OrderItem", "OrderItem")
+                        .WithMany("Allocations")
+                        .HasForeignKey("OrderItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoppingOnline.Model.Entities.Stock", "Stock")
+                        .WithMany()
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ShoppingOnline.Model.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("OrderItem");
+
+                    b.Navigation("Stock");
 
                     b.Navigation("Vendor");
                 });
@@ -476,6 +632,36 @@ namespace ShoppingOnline.Database.Migrations
                     b.Navigation("Vendor");
                 });
 
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.PurchaseOrder", b =>
+                {
+                    b.HasOne("ShoppingOnline.Model.Entities.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.PurchaseOrderItem", b =>
+                {
+                    b.HasOne("ShoppingOnline.Model.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoppingOnline.Model.Entities.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("Items")
+                        .HasForeignKey("PurchaseOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("PurchaseOrder");
+                });
+
             modelBuilder.Entity("ShoppingOnline.Model.Entities.ShippingAddress", b =>
                 {
                     b.HasOne("ShoppingOnline.Model.Entities.User", "User")
@@ -495,6 +681,11 @@ namespace ShoppingOnline.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ShoppingOnline.Model.Entities.PurchaseOrderItem", "PurchaseOrderItem")
+                        .WithMany("ReceivedLots")
+                        .HasForeignKey("PurchaseOrderItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("ShoppingOnline.Model.Entities.Vendor", "Vendor")
                         .WithMany("Stocks")
                         .HasForeignKey("VendorId")
@@ -503,12 +694,19 @@ namespace ShoppingOnline.Database.Migrations
 
                     b.Navigation("Product");
 
+                    b.Navigation("PurchaseOrderItem");
+
                     b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("ShoppingOnline.Model.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.OrderItem", b =>
+                {
+                    b.Navigation("Allocations");
                 });
 
             modelBuilder.Entity("ShoppingOnline.Model.Entities.Product", b =>
@@ -519,6 +717,16 @@ namespace ShoppingOnline.Database.Migrations
             modelBuilder.Entity("ShoppingOnline.Model.Entities.ProductCategory", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.PurchaseOrder", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("ShoppingOnline.Model.Entities.PurchaseOrderItem", b =>
+                {
+                    b.Navigation("ReceivedLots");
                 });
 
             modelBuilder.Entity("ShoppingOnline.Model.Entities.User", b =>

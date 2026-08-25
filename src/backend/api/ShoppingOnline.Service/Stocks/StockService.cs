@@ -38,8 +38,8 @@ public class StockService(
         var query = MapToResponse(baseQuery);
 
         query = request.IsOrderDescending
-            ? query.OrderByDescending(s => s.StockId)
-            : query.OrderBy(s => s.StockId);
+            ? query.OrderByDescending(s => s.ReceivedOn)
+            : query.OrderBy(s => s.ReceivedOn);
         var totalRecords = await query.CountAsync();
         var totalPages = (int)Math.Ceiling((double)totalRecords / request.PageLimit);
         var responseData = await query.Skip((request.PageIndex - 1) * request.PageLimit).Take(request.PageLimit)
@@ -58,84 +58,6 @@ public class StockService(
         return new Service200Response(result);
     }
 
-    public async Task<ServiceResponse> CreateStockAsync(CreateStockRequest request)
-    {
-        var productExists = await DbContext.Set<Product>().AnyAsync(p => p.ProductId == request.ProductId);
-        if (!productExists)
-        {
-            return new Service404Response("Product not found.");
-        }
-
-        var vendorExists = await DbContext.Set<Vendor>().AnyAsync(v => v.VendorId == request.VendorId);
-        if (!vendorExists)
-        {
-            return new Service404Response("Vendor not found.");
-        }
-
-        var stockExists = await DbSet.AnyAsync(s => s.ProductId == request.ProductId && s.VendorId == request.VendorId);
-        if (stockExists)
-        {
-            return new Service409Response("Stock for this product and vendor already exists. Use update instead.");
-        }
-
-        var stock = new Stock
-        {
-            ProductId = request.ProductId,
-            VendorId = request.VendorId,
-            Quantity = request.Quantity,
-            Price = request.Price,
-            CreatedBy = "system",
-            CreatedOn = DateTime.UtcNow,
-        };
-
-        DbSet.Add(stock);
-
-        var committed = await UnitOfWork.CommitAsync();
-        if (!committed)
-        {
-            return new Service500Response(new Exception("Failed to create the stock."));
-        }
-
-        var result = await MapToResponse(DbSet.Where(s => s.StockId == stock.StockId)).FirstOrDefaultAsync();
-        return new Service200Response(result);
-    }
-
-    public async Task<ServiceResponse> UpdateStockAsync(UpdateStockRequest request)
-    {
-        var stock = await DbSet.FirstOrDefaultAsync(s => s.StockId == request.StockId);
-        if (stock is null) return new Service404Response();
-
-        stock.Quantity = request.Quantity;
-        stock.Price = request.Price;
-        stock.ModifiedBy = "system";
-        stock.ModifiedDate = DateTime.UtcNow;
-
-        var committed = await UnitOfWork.CommitAsync();
-        if (!committed)
-        {
-            return new Service500Response(new Exception("Failed to update the stock."));
-        }
-
-        var result = await MapToResponse(DbSet.Where(s => s.StockId == stock.StockId)).FirstOrDefaultAsync();
-        return new Service200Response(result);
-    }
-
-    public async Task<ServiceResponse> DeleteStockAsync(DeleteStockRequest request)
-    {
-        var stock = await DbSet.FirstOrDefaultAsync(s => s.StockId == request.StockId);
-        if (stock is null) return new Service404Response();
-
-        DbSet.Remove(stock);
-
-        var committed = await UnitOfWork.CommitAsync();
-        if (!committed)
-        {
-            return new Service500Response(new Exception("Failed to delete the stock."));
-        }
-
-        return new Service200Response("Stock deleted successfully.");
-    }
-
     private static IQueryable<GetStockResponse> MapToResponse(IQueryable<Stock> query)
         => query.Select(s => new GetStockResponse
         {
@@ -145,6 +67,8 @@ public class StockService(
             VendorId = s.VendorId,
             VendorName = s.Vendor.VendorName,
             Quantity = s.Quantity,
-            Price = s.Price,
+            Cost = s.Cost,
+            ReceivedOn = s.CreatedOn,
+            PurchaseOrderId = s.PurchaseOrderItem != null ? s.PurchaseOrderItem.PurchaseOrderId : null,
         });
 }
