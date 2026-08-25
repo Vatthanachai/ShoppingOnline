@@ -1,5 +1,6 @@
 using Asp.Versioning;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using ShoppingOnline.Component.Abstractions.Controllers;
@@ -47,6 +48,7 @@ public class StocksController(
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateStockAsync([FromBody] CreateStockRequest request)
         => ReturnResponseWithHttpStatus(await createStockHandler.Handler(request));
@@ -57,6 +59,7 @@ public class StocksController(
     /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateStockAsync(int id, [FromBody] UpdateStockRequest request)
     {
@@ -69,6 +72,7 @@ public class StocksController(
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteStockAsync(int id)
         => ReturnResponseWithHttpStatus(await deleteStockHandler.Handler(new DeleteStockRequest { StockId = id }));

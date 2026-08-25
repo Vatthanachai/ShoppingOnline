@@ -1,5 +1,6 @@
 using Asp.Versioning;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using ShoppingOnline.Component.Abstractions.Controllers;
@@ -47,6 +48,7 @@ public class ProductsController(
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductRequest request)
         => ReturnResponseWithHttpStatus(await createProductHandler.Handler(request));
@@ -57,6 +59,7 @@ public class ProductsController(
     /// <param name="id"></param>
     /// <param name="request"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] UpdateProductRequest request)
     {
@@ -69,6 +72,7 @@ public class ProductsController(
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeactivateProductAsync(int id)
         => ReturnResponseWithHttpStatus(

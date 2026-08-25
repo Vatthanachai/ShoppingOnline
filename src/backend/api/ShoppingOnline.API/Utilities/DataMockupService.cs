@@ -18,10 +18,16 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
     }
 
 
+    /// <summary>
+    /// Fixed local-dev password for the seeded admin account, so it stays known/log-in-able
+    /// across restarts instead of a fresh random one that's only ever printed once. Dev-only
+    /// mockup data - never used for a real deployment's admin credentials.
+    /// </summary>
+    private const string DefaultAdminPassword = "Admin@12345";
+
     private void UserInitialized()
     {
-        var strPassword = encryptionService.PasswordGenerate();
-        var hash = encryptionService.HashPassword(strPassword, out byte[] salt);
+        var hash = encryptionService.HashPassword(DefaultAdminPassword, out byte[] salt);
         var saltHex = Convert.ToHexString(salt);
         var combinedPasswordHash = encryptionService.CombinePasswordComponents(hash, saltHex);
 
@@ -31,7 +37,7 @@ public class DataMockupService(ILogger logger, IShoppingDbContext context, IEncr
 
         if (!context.Set<User>().Any(u => u.Email == adminEmail))
         {
-            logger.Information($"Default admin user initialized via email: {adminEmail}, password: {strPassword}");
+            logger.Information($"Default admin user initialized via email: {adminEmail}, password: {DefaultAdminPassword}");
 
             context.Set<User>().Add(
                 new User

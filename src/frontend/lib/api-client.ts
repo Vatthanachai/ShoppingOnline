@@ -1,15 +1,19 @@
 import "server-only";
 
 import type {
+  AdminUser,
   Category,
+  CategoryRequest,
   ChangePasswordRequest,
   CreateOrderRequest,
+  CreateStockRequest,
   DeactivateAccountRequest,
   ForgotPasswordRequest,
   OrderDetail,
   OrderSummary,
   PaginatedResponse,
   Product,
+  ProductRequest,
   Profile,
   ServiceResponse,
   ShippingAddress,
@@ -20,6 +24,9 @@ import type {
   SignUpResult,
   Stock,
   UpdateProfileRequest,
+  UpdateStockRequest,
+  Vendor,
+  VendorRequest,
 } from "@/lib/types";
 
 const BASE_URL = process.env.API_URL ?? "http://localhost:5018";
@@ -146,6 +153,44 @@ export class ApiClient {
     return this.paginated<Category>("/api/product_categories", query);
   }
 
+  getCategory(id: number) {
+    return this.request<Category>(`/api/product_categories/${id}`);
+  }
+
+  createCategory(req: CategoryRequest) {
+    return this.request<Category>("/api/product_categories", { method: "POST", body: req });
+  }
+
+  updateCategory(id: number, req: CategoryRequest) {
+    return this.request<Category>(`/api/product_categories/${id}`, { method: "PUT", body: req });
+  }
+
+  deactivateCategory(id: number) {
+    return this.request<string>(`/api/product_categories/${id}`, { method: "DELETE" });
+  }
+
+  // ----- Vendors -----
+
+  getVendorsPage(query?: { search?: string; page_index?: number; page_limit?: number }) {
+    return this.paginated<Vendor>("/api/vendors", query);
+  }
+
+  getVendor(id: number) {
+    return this.request<Vendor>(`/api/vendors/${id}`);
+  }
+
+  createVendor(req: VendorRequest) {
+    return this.request<Vendor>("/api/vendors", { method: "POST", body: req });
+  }
+
+  updateVendor(id: number, req: VendorRequest) {
+    return this.request<Vendor>(`/api/vendors/${id}`, { method: "PUT", body: req });
+  }
+
+  deactivateVendor(id: number) {
+    return this.request<string>(`/api/vendors/${id}`, { method: "DELETE" });
+  }
+
   // ----- Products -----
 
   getProductsPage(query?: {
@@ -173,6 +218,18 @@ export class ApiClient {
     return this.request<Product>(`/api/products/${id}`);
   }
 
+  createProduct(req: ProductRequest) {
+    return this.request<Product>("/api/products", { method: "POST", body: req });
+  }
+
+  updateProduct(id: number, req: ProductRequest) {
+    return this.request<Product>(`/api/products/${id}`, { method: "PUT", body: req });
+  }
+
+  deactivateProduct(id: number) {
+    return this.request<string>(`/api/products/${id}`, { method: "DELETE" });
+  }
+
   // ----- Stocks -----
 
   getStocksPage(query?: { product_id?: number; vendor_id?: number; page_index?: number; page_limit?: number }) {
@@ -183,6 +240,18 @@ export class ApiClient {
       page_index: query?.page_index,
       page_limit: query?.page_limit,
     });
+  }
+
+  createStock(req: CreateStockRequest) {
+    return this.request<Stock>("/api/stocks", { method: "POST", body: req });
+  }
+
+  updateStock(id: number, req: UpdateStockRequest) {
+    return this.request<Stock>(`/api/stocks/${id}`, { method: "PUT", body: req });
+  }
+
+  deleteStock(id: number) {
+    return this.request<string>(`/api/stocks/${id}`, { method: "DELETE" });
   }
 
   // ----- Shipping addresses -----
@@ -219,6 +288,20 @@ export class ApiClient {
 
   cancelOrder(id: number) {
     return this.request<string>(`/api/orders/${id}/cancel`, { method: "POST" });
+  }
+
+  // ----- Users (admin) -----
+
+  getUsersPage(query?: { search?: string; page_index?: number; page_limit?: number }) {
+    return this.paginated<AdminUser>("/api/users", query);
+  }
+
+  activateUser(id: number) {
+    return this.request<string>(`/api/users/${id}/activate`, { method: "POST" });
+  }
+
+  deactivateUser(id: number) {
+    return this.request<string>(`/api/users/${id}/deactivate`, { method: "POST" });
   }
 }
 

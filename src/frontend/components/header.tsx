@@ -42,6 +42,11 @@ export function Header({ profile }: { profile: Profile | null }) {
               <Button variant="ghost" nativeButton={false} render={<Link href="/orders" />}>
                 คำสั่งซื้อ
               </Button>
+              {profile.role === "Admin" && (
+                <Button variant="ghost" nativeButton={false} render={<Link href="/admin" />}>
+                  จัดการระบบ
+                </Button>
+              )}
               <Button variant="ghost" nativeButton={false} render={<Link href="/account" />}>
                 <User className="size-4" />
                 {profile.name}

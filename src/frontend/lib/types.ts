@@ -79,6 +79,29 @@ export interface Category {
   is_active: boolean;
 }
 
+export interface CategoryRequest {
+  category_name: string;
+  description: string;
+}
+
+// ----- Vendors -----
+
+export interface Vendor {
+  vendor_id: number;
+  vendor_name: string;
+  contact_person: string;
+  email: string;
+  phone: string;
+  is_active: boolean;
+}
+
+export interface VendorRequest {
+  vendor_name: string;
+  contact_person: string;
+  email: string;
+  phone: string;
+}
+
 // ----- Products -----
 
 export interface Product {
@@ -92,6 +115,16 @@ export interface Product {
   description: string;
   is_active: boolean;
   min_price: number | null;
+  image_path: string | null;
+}
+
+export interface ProductRequest {
+  product_category_id: number;
+  vendor_id: number;
+  product_code: string;
+  product_name: string;
+  description: string;
+  image_path?: string;
 }
 
 // ----- Stocks -----
@@ -104,6 +137,30 @@ export interface Stock {
   vendor_name: string;
   quantity: number;
   price: number;
+}
+
+export interface CreateStockRequest {
+  product_id: number;
+  vendor_id: number;
+  quantity: number;
+  price: number;
+}
+
+export interface UpdateStockRequest {
+  quantity: number;
+  price: number;
+}
+
+// ----- Users (admin) -----
+
+export interface AdminUser {
+  user_id: number;
+  name: string;
+  email: string;
+  phone: string;
+  role: UserRole;
+  is_active: boolean;
+  created_on: string;
 }
 
 // ----- Shipping addresses -----
