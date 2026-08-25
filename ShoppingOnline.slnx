@@ -1,2 +1,19 @@
 <Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/backend/" />
+  <Folder Name="/src/backend/api/">
+    <Project Path="src/backend/api/ShoppingOnline.API/ShoppingOnline.API.csproj" />
+    <Project Path="src/backend/api/ShoppingOnline.Database/ShoppingOnline.Database.csproj" />
+    <Project Path="src/backend/api/ShoppingOnline.Handler/ShoppingOnline.Handler.csproj" />
+    <Project Path="src/backend/api/ShoppingOnline.Model/ShoppingOnline.Model.csproj" />
+    <Project Path="src/backend/api/ShoppingOnline.Service/ShoppingOnline.Service.csproj" />
+  </Folder>
+  <Folder Name="/src/backend/utilities/">
+    <Project Path="src/backend/utilities/ShoppingOnline.Component.Abstractions/ShoppingOnline.Component.Abstractions.csproj" />
+    <Project Path="src/backend/utilities/ShoppingOnline.Component.Data/ShoppingOnline.Component.Data.csproj" />
+    <Project Path="src/backend/utilities/ShoppingOnline.ServiceDefault/ShoppingOnline.ServiceDefault.csproj" />
+  </Folder>
+  <Folder Name="/src/dashboard/">
+    <Project Path="src/dashboard/ShoppingOnline.AppHost/ShoppingOnline.AppHost.csproj" />
+  </Folder>
 </Solution>
