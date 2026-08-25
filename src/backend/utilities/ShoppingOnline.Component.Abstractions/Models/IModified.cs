@@ -2,6 +2,6 @@
 
 public interface IModified
 {
-    string ModifiedBy { get; set; }
-    DateTime ModifiedDate { get; set; }
+    string? ModifiedBy { get; set; }
+    DateTime? ModifiedDate { get; set; }
 }

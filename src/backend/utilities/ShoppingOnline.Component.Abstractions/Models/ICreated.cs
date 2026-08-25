@@ -3,5 +3,5 @@
 public interface ICreated
 {
     string CreatedBy { get; set; }
-    DateTime CreatedDate { get; set; }
+    DateTime CreatedOn { get; set; }
 }

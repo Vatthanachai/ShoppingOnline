@@ -10,9 +10,9 @@ public class User : IAuditable, IActive
     public string Phone { get; set; }
     public string PasswordHash { get; set; }
     public string CreatedBy { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string ModifiedBy { get; set; }
-    public DateTime ModifiedDate { get; set; }
+    public DateTime CreatedOn { get; set; }
+    public string? ModifiedBy { get; set; }
+    public DateTime? ModifiedDate { get; set; }
     public bool IsActive { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
