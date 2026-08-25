@@ -13,6 +13,15 @@ public class UserTableConfig : IEntityTypeConfiguration<User>
 
         builder.HasKey(k => k.UserId);
 
+        builder.Property(p => p.SecurityStamp)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        builder.Property(p => p.Role)
+            .HasConversion<string>()
+            .HasMaxLength(20)
+            .IsRequired();
+
         builder.Property(p => p.CreatedBy)
             .IsRequired()
             .HasMaxLength(100);

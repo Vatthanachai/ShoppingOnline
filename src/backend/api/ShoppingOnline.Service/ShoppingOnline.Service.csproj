@@ -6,4 +6,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="10.0.12" />
+    <PackageReference Include="Mapster.EFCore" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\utilities\ShoppingOnline.Component.Abstractions\ShoppingOnline.Component.Abstractions.csproj" />
+    <ProjectReference Include="..\ShoppingOnline.Database\ShoppingOnline.Database.csproj" />
+    <ProjectReference Include="..\ShoppingOnline.Model\ShoppingOnline.Model.csproj" />
+  </ItemGroup>
+
 </Project>

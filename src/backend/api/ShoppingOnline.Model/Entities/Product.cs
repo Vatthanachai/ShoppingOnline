@@ -13,6 +13,7 @@ public class Product : IAuditable, IActive
     public string ProductCode { get; set; }
     public string ProductName { get; set; }
     public string Description { get; set; }
+    public string? ImagePath { get; set; }
 
     public string CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }

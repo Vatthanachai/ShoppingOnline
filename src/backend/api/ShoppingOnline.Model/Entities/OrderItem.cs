@@ -9,6 +9,8 @@ public class OrderItem : IAuditable
     public virtual Order Order { get; set; }
     public int ProductId { get; set; }
     public virtual Product Product { get; set; }
+    public int VendorId { get; set; }
+    public virtual Vendor Vendor { get; set; }
     public int Quantity { get; set; }
     public decimal Price { get; set; }
     public string CreatedBy { get; set; }

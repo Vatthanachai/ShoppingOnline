@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\utilities\ShoppingOnline.Component.Abstractions\ShoppingOnline.Component.Abstractions.csproj" />
+    <ProjectReference Include="..\ShoppingOnline.Database\ShoppingOnline.Database.csproj" />
+    <ProjectReference Include="..\ShoppingOnline.Model\ShoppingOnline.Model.csproj" />
+    <ProjectReference Include="..\ShoppingOnline.Service\ShoppingOnline.Service.csproj" />
+  </ItemGroup>
+
 </Project>

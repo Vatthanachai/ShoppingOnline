@@ -11,6 +11,10 @@ public class OrderTableConfig : IEntityTypeConfiguration<Order>
     {
         builder.ToTable($"tb_{nameof(Order).ToLower()}");
         builder.HasKey(k => k.OrderId);
+        builder.Property(p => p.Status)
+            .HasConversion<string>()
+            .HasMaxLength(20)
+            .IsRequired();
         builder.Property(p => p.CreatedBy)
             .IsRequired()
             .HasMaxLength(100);

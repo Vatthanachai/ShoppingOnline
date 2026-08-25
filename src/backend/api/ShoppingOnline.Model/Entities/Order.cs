@@ -9,6 +9,7 @@ public class Order : IAuditable
     public virtual User User { get; set; }
     public DateTime OrderDate { get; set; }
     public decimal TotalAmount { get; set; }
+    public OrderStatus Status { get; set; }
     public string CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }
     public string? ModifiedBy { get; set; }

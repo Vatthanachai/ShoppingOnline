@@ -13,6 +13,9 @@ public class ProductTableConfig : IEntityTypeConfiguration<Product>
 
         builder.HasKey(k => k.ProductId);
 
+        builder.Property(p => p.ImagePath)
+            .HasMaxLength(500);
+
         builder.Property(p => p.CreatedBy)
             .IsRequired()
             .HasMaxLength(100);

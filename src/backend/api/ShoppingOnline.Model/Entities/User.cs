@@ -9,6 +9,9 @@ public class User : IAuditable, IActive
     public string Email { get; set; }
     public string Phone { get; set; }
     public string PasswordHash { get; set; }
+    public bool MustChangePassword { get; set; }
+    public string SecurityStamp { get; set; }
+    public UserRole Role { get; set; }
     public string CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }
     public string? ModifiedBy { get; set; }
