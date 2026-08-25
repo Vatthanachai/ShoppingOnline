@@ -95,6 +95,33 @@ export function ProductForm({ mode, initial, categories, vendors, onSuccess }: P
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="sell_price">ราคาขาย (ไม่รวมภาษี)</Label>
+          <Input
+            id="sell_price"
+            name="sell_price"
+            type="number"
+            min={0}
+            step="0.01"
+            defaultValue={initial?.sell_price}
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="tax_rate_percent">อัตราภาษี (%)</Label>
+          <Input
+            id="tax_rate_percent"
+            name="tax_rate_percent"
+            type="number"
+            min={0}
+            step="0.01"
+            defaultValue={initial?.tax_rate_percent ?? 7}
+            required
+          />
+        </div>
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="description">รายละเอียด</Label>
         <Input id="description" name="description" type="text" defaultValue={initial?.description} />

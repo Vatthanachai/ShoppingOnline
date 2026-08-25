@@ -14,6 +14,8 @@ public class Product : IAuditable, IActive
     public string ProductName { get; set; }
     public string Description { get; set; }
     public string? ImagePath { get; set; }
+    public decimal SellPrice { get; set; }
+    public decimal TaxRatePercent { get; set; } = 7m;
 
     public string CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }

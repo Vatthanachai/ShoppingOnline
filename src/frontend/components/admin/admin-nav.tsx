@@ -10,6 +10,7 @@ const SECTIONS = [
   { href: "/admin/vendors", label: "ผู้ขาย" },
   { href: "/admin/categories", label: "หมวดหมู่" },
   { href: "/admin/stocks", label: "สต็อก" },
+  { href: "/admin/purchase-orders", label: "ใบสั่งซื้อ" },
   { href: "/admin/users", label: "ผู้ใช้งาน" },
 ];
 

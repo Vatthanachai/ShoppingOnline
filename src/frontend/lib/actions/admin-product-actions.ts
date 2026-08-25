@@ -17,6 +17,8 @@ function readProductForm(formData: FormData): ProductRequest {
     product_name: String(formData.get("product_name") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),
     image_path: imagePath || undefined,
+    sell_price: Number(formData.get("sell_price")),
+    tax_rate_percent: Number(formData.get("tax_rate_percent")),
   };
 }
 

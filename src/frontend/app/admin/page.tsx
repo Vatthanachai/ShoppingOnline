@@ -6,7 +6,8 @@ const SECTIONS = [
   { href: "/admin/products", label: "สินค้า", description: "จัดการรายการสินค้า หมวดหมู่ และผู้ขาย" },
   { href: "/admin/vendors", label: "ผู้ขาย", description: "จัดการข้อมูลผู้ขาย" },
   { href: "/admin/categories", label: "หมวดหมู่", description: "จัดการหมวดหมู่สินค้า" },
-  { href: "/admin/stocks", label: "สต็อก", description: "จัดการจำนวนและราคาสต็อกสินค้า" },
+  { href: "/admin/stocks", label: "สต็อก", description: "ดูล็อตสต็อกคงเหลือ (แบบดูอย่างเดียว)" },
+  { href: "/admin/purchase-orders", label: "ใบสั่งซื้อ", description: "ออกใบสั่งซื้อไปยัง vendor และรับสินค้าเข้าสต็อก" },
   { href: "/admin/users", label: "ผู้ใช้งาน", description: "ดูรายชื่อและเปิด/ปิดการใช้งานบัญชีผู้ใช้" },
 ];
 

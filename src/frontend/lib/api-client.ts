@@ -6,7 +6,7 @@ import type {
   CategoryRequest,
   ChangePasswordRequest,
   CreateOrderRequest,
-  CreateStockRequest,
+  CreatePurchaseOrderRequest,
   DeactivateAccountRequest,
   ForgotPasswordRequest,
   OrderDetail,
@@ -15,6 +15,10 @@ import type {
   Product,
   ProductRequest,
   Profile,
+  PurchaseOrderDetail,
+  PurchaseOrderStatus,
+  PurchaseOrderSummary,
+  ReceivePurchaseOrderRequest,
   ServiceResponse,
   ShippingAddress,
   ShippingAddressRequest,
@@ -24,7 +28,6 @@ import type {
   SignUpResult,
   Stock,
   UpdateProfileRequest,
-  UpdateStockRequest,
   Vendor,
   VendorRequest,
 } from "@/lib/types";
@@ -149,8 +152,18 @@ export class ApiClient {
 
   // ----- Categories -----
 
-  getCategoriesPage(query?: { search?: string; page_index?: number; page_limit?: number }) {
-    return this.paginated<Category>("/api/product_categories", query);
+  getCategoriesPage(query?: {
+    search?: string;
+    include_inactive?: boolean;
+    page_index?: number;
+    page_limit?: number;
+  }) {
+    return this.paginated<Category>("/api/product_categories", {
+      search: query?.search,
+      includeInactive: query?.include_inactive,
+      page_index: query?.page_index,
+      page_limit: query?.page_limit,
+    });
   }
 
   getCategory(id: number) {
@@ -171,8 +184,18 @@ export class ApiClient {
 
   // ----- Vendors -----
 
-  getVendorsPage(query?: { search?: string; page_index?: number; page_limit?: number }) {
-    return this.paginated<Vendor>("/api/vendors", query);
+  getVendorsPage(query?: {
+    search?: string;
+    include_inactive?: boolean;
+    page_index?: number;
+    page_limit?: number;
+  }) {
+    return this.paginated<Vendor>("/api/vendors", {
+      search: query?.search,
+      includeInactive: query?.include_inactive,
+      page_index: query?.page_index,
+      page_limit: query?.page_limit,
+    });
   }
 
   getVendor(id: number) {
@@ -197,6 +220,7 @@ export class ApiClient {
     search?: string;
     product_category_id?: number;
     vendor_id?: number;
+    include_inactive?: boolean;
     page_index?: number;
     page_limit?: number;
   }) {
@@ -209,6 +233,7 @@ export class ApiClient {
       search: query?.search,
       productCategoryId: query?.product_category_id,
       vendorId: query?.vendor_id,
+      includeInactive: query?.include_inactive,
       page_index: query?.page_index,
       page_limit: query?.page_limit,
     });
@@ -230,7 +255,7 @@ export class ApiClient {
     return this.request<string>(`/api/products/${id}`, { method: "DELETE" });
   }
 
-  // ----- Stocks -----
+  // ----- Stocks (read-only inventory view; lots are created only via received Purchase Orders) -----
 
   getStocksPage(query?: { product_id?: number; vendor_id?: number; page_index?: number; page_limit?: number }) {
     // See getProductsPage note above re: snake_case vs. bare-property query binding.
@@ -240,18 +265,6 @@ export class ApiClient {
       page_index: query?.page_index,
       page_limit: query?.page_limit,
     });
-  }
-
-  createStock(req: CreateStockRequest) {
-    return this.request<Stock>("/api/stocks", { method: "POST", body: req });
-  }
-
-  updateStock(id: number, req: UpdateStockRequest) {
-    return this.request<Stock>(`/api/stocks/${id}`, { method: "PUT", body: req });
-  }
-
-  deleteStock(id: number) {
-    return this.request<string>(`/api/stocks/${id}`, { method: "DELETE" });
   }
 
   // ----- Shipping addresses -----
@@ -302,6 +315,38 @@ export class ApiClient {
 
   deactivateUser(id: number) {
     return this.request<string>(`/api/users/${id}/deactivate`, { method: "POST" });
+  }
+
+  // ----- Purchase orders (admin) -----
+
+  getPurchaseOrdersPage(query?: {
+    vendor_id?: number;
+    status?: PurchaseOrderStatus;
+    page_index?: number;
+    page_limit?: number;
+  }) {
+    return this.paginated<PurchaseOrderSummary>("/api/purchase_orders", {
+      vendorId: query?.vendor_id,
+      status: query?.status,
+      page_index: query?.page_index,
+      page_limit: query?.page_limit,
+    });
+  }
+
+  getPurchaseOrder(id: number) {
+    return this.request<PurchaseOrderDetail>(`/api/purchase_orders/${id}`);
+  }
+
+  createPurchaseOrder(req: CreatePurchaseOrderRequest) {
+    return this.request<PurchaseOrderDetail>("/api/purchase_orders", { method: "POST", body: req });
+  }
+
+  sendPurchaseOrder(id: number) {
+    return this.request<PurchaseOrderDetail>(`/api/purchase_orders/${id}/send`, { method: "POST" });
+  }
+
+  receivePurchaseOrder(id: number, req: ReceivePurchaseOrderRequest) {
+    return this.request<PurchaseOrderDetail>(`/api/purchase_orders/${id}/receive`, { method: "POST", body: req });
   }
 }
 

@@ -21,6 +21,7 @@ export default async function AdminCategoriesPage({
   const client = await getApiClient();
   const { data: categories, total_pages } = await client.getCategoriesPage({
     search: search || undefined,
+    include_inactive: true,
     page_index: pageIndex,
     page_limit: PAGE_LIMIT,
   });

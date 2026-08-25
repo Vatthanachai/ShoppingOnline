@@ -38,6 +38,11 @@ public class VendorService(
                 s.Email.Contains(request.Search, StringComparison.InvariantCultureIgnoreCase));
         }
 
+        if (!request.IncludeInactive)
+        {
+            predicate = predicate.And(s => s.IsActive);
+        }
+
         var query = DbContext.Set<Vendor>().ProjectToType<GetVendorsResponse>().Where(predicate);
 
         query = request.IsOrderDescending

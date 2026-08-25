@@ -14,7 +14,6 @@ export function CartLineItem({ item }: { item: CartItem }) {
     <div className="flex items-center justify-between gap-4 border-b py-4 last:border-b-0">
       <div className="flex flex-col gap-0.5">
         <span className="font-medium">{item.product_name}</span>
-        <span className="text-sm text-muted-foreground">ผู้ขาย: {item.vendor_name}</span>
         <span className="text-sm text-muted-foreground">{formatCurrency(item.price)} / ชิ้น</span>
       </div>
 
@@ -25,7 +24,7 @@ export function CartLineItem({ item }: { item: CartItem }) {
           value={item.quantity}
           onChange={(e) => {
             const value = Number(e.target.value);
-            updateQuantity(item.product_id, item.vendor_id, Number.isFinite(value) ? Math.max(1, value) : 1);
+            updateQuantity(item.product_id, Number.isFinite(value) ? Math.max(1, value) : 1);
           }}
           className="w-20"
         />
@@ -34,7 +33,7 @@ export function CartLineItem({ item }: { item: CartItem }) {
           type="button"
           variant="ghost"
           size="icon"
-          onClick={() => removeItem(item.product_id, item.vendor_id)}
+          onClick={() => removeItem(item.product_id)}
           aria-label="ลบสินค้า"
         >
           <Trash2 className="size-4" />

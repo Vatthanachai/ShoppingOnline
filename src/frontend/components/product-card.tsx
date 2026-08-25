@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProductImage } from "@/components/product-image";
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/lib/types";
 
@@ -9,6 +10,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/products/${product.product_id}`} className="block h-full">
       <Card className="h-full transition-shadow hover:shadow-md">
+        <ProductImage src={product.image_path} alt={product.product_name} className="aspect-square w-full" />
         <CardHeader>
           <Badge variant="secondary" className="w-fit">
             {product.product_category_name}
@@ -19,7 +21,7 @@ export function ProductCard({ product }: { product: Product }) {
           <p className="line-clamp-2">{product.description}</p>
           <p>ผู้ขาย: {product.vendor_name}</p>
         </CardContent>
-        <CardFooter className="font-medium">{formatCurrency(product.min_price)}</CardFooter>
+        <CardFooter className="font-medium">{formatCurrency(product.price_with_tax)}</CardFooter>
       </Card>
     </Link>
   );

@@ -21,6 +21,7 @@ export default async function AdminVendorsPage({
   const client = await getApiClient();
   const { data: vendors, total_pages } = await client.getVendorsPage({
     search: search || undefined,
+    include_inactive: true,
     page_index: pageIndex,
     page_limit: PAGE_LIMIT,
   });

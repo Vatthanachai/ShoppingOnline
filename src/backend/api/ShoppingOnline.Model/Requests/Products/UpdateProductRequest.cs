@@ -9,4 +9,6 @@ public class UpdateProductRequest
     public string ProductName { get; set; }
     public string Description { get; set; }
     public string? ImagePath { get; set; }
+    public decimal SellPrice { get; set; }
+    public decimal TaxRatePercent { get; set; }
 }

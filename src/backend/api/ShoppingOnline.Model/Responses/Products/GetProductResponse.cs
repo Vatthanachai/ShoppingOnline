@@ -11,6 +11,9 @@ public class GetProductResponse
     public string ProductName { get; set; }
     public string Description { get; set; }
     public bool IsActive { get; set; }
-    public decimal? MinPrice { get; set; }
+    public decimal SellPrice { get; set; }
+    public decimal TaxRatePercent { get; set; }
+    public decimal PriceWithTax { get; set; }
+    public int AvailableQuantity { get; set; }
     public string? ImagePath { get; set; }
 }

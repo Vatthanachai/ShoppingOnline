@@ -5,11 +5,13 @@ using ShoppingOnline.Model.Requests.Stocks;
 
 namespace ShoppingOnline.Service.Stocks;
 
+/// <summary>
+/// Read-only inventory view. Stock lots are only ever created via a received Purchase Order
+/// (see PurchaseOrderService.ReceiveAsync) and consumed FIFO by OrderService - there's no
+/// direct create/update/delete here anymore.
+/// </summary>
 public interface IStockService : IBaseService<Stock>
 {
     Task<ServiceResponse> GetStocksAsync(GetStocksRequest request);
     Task<ServiceResponse> GetStockAsync(GetStockRequest request);
-    Task<ServiceResponse> CreateStockAsync(CreateStockRequest request);
-    Task<ServiceResponse> UpdateStockAsync(UpdateStockRequest request);
-    Task<ServiceResponse> DeleteStockAsync(DeleteStockRequest request);
 }

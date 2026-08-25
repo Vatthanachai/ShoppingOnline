@@ -8,5 +8,7 @@ public class GetStockResponse
     public int VendorId { get; set; }
     public string VendorName { get; set; }
     public int Quantity { get; set; }
-    public decimal Price { get; set; }
+    public decimal Cost { get; set; }
+    public DateTime ReceivedOn { get; set; }
+    public int? PurchaseOrderId { get; set; }
 }

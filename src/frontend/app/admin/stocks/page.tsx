@@ -2,9 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { StockDialog } from "@/components/admin/stocks/stock-dialog";
-import { DeleteStockDialog } from "@/components/admin/stocks/delete-stock-dialog";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { getApiClient } from "@/lib/session";
 
 const PAGE_LIMIT = 20;
@@ -25,8 +23,8 @@ export default async function AdminStocksPage({
   const client = await getApiClient();
   const [{ data: stocks, total_pages }, { data: products }, { data: vendors }] = await Promise.all([
     client.getStocksPage({ product_id: productId, vendor_id: vendorId, page_index: pageIndex, page_limit: PAGE_LIMIT }),
-    client.getProductsPage({ page_limit: 100 }),
-    client.getVendorsPage({ page_limit: 100 }),
+    client.getProductsPage({ include_inactive: true, page_limit: 100 }),
+    client.getVendorsPage({ include_inactive: true, page_limit: 100 }),
   ]);
 
   function pageHref(targetPage: number) {
@@ -39,57 +37,63 @@ export default async function AdminStocksPage({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <form method="get" className="flex flex-1 flex-wrap items-end gap-2">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="product" className="text-sm font-medium">
-              สินค้า
-            </label>
-            <select id="product" name="product" defaultValue={product ?? ""} className={selectClassName}>
-              <option value="">ทั้งหมด</option>
-              {products.map((p) => (
-                <option key={p.product_id} value={p.product_id}>
-                  {p.product_name}
-                </option>
-              ))}
-            </select>
-          </div>
+      <p className="text-sm text-muted-foreground">
+        หน้านี้แสดงล็อตสต็อกที่มีอยู่ (แบบดูอย่างเดียว) — การเพิ่มสต็อกใหม่ทำผ่าน
+        <Link href="/admin/purchase-orders" className="mx-1 text-primary underline underline-offset-4">
+          ใบสั่งซื้อ (Purchase Orders)
+        </Link>
+        เท่านั้น ระบบจะตัดสต็อกแบบ FIFO ตามวันที่รับเข้าเมื่อลูกค้าสั่งซื้อ
+      </p>
 
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="vendor" className="text-sm font-medium">
-              ผู้ขาย
-            </label>
-            <select id="vendor" name="vendor" defaultValue={vendor ?? ""} className={selectClassName}>
-              <option value="">ทั้งหมด</option>
-              {vendors.map((v) => (
-                <option key={v.vendor_id} value={v.vendor_id}>
-                  {v.vendor_name}
-                </option>
-              ))}
-            </select>
-          </div>
+      <form method="get" className="flex flex-wrap items-end gap-2">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="product" className="text-sm font-medium">
+            สินค้า
+          </label>
+          <select id="product" name="product" defaultValue={product ?? ""} className={selectClassName}>
+            <option value="">ทั้งหมด</option>
+            {products.map((p) => (
+              <option key={p.product_id} value={p.product_id}>
+                {p.product_name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <Button type="submit" variant="outline">
-            กรอง
-          </Button>
-        </form>
-        <StockDialog mode="create" products={products} vendors={vendors} />
-      </div>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="vendor" className="text-sm font-medium">
+            ผู้ขาย
+          </label>
+          <select id="vendor" name="vendor" defaultValue={vendor ?? ""} className={selectClassName}>
+            <option value="">ทั้งหมด</option>
+            {vendors.map((v) => (
+              <option key={v.vendor_id} value={v.vendor_id}>
+                {v.vendor_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <Button type="submit" variant="outline">
+          กรอง
+        </Button>
+      </form>
 
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>สินค้า</TableHead>
             <TableHead>ผู้ขาย</TableHead>
-            <TableHead>จำนวน</TableHead>
-            <TableHead>ราคา</TableHead>
-            <TableHead className="text-right">การจัดการ</TableHead>
+            <TableHead>จำนวนคงเหลือ</TableHead>
+            <TableHead>ต้นทุน/หน่วย</TableHead>
+            <TableHead>รับเข้าเมื่อ</TableHead>
+            <TableHead>PO อ้างอิง</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {stocks.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-muted-foreground">
+              <TableCell colSpan={6} className="text-center text-muted-foreground">
                 ไม่พบสต็อก
               </TableCell>
             </TableRow>
@@ -99,12 +103,19 @@ export default async function AdminStocksPage({
                 <TableCell className="font-medium">{stock.product_name}</TableCell>
                 <TableCell className="text-muted-foreground">{stock.vendor_name}</TableCell>
                 <TableCell>{stock.quantity}</TableCell>
-                <TableCell>{formatCurrency(stock.price)}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <StockDialog mode="edit" stock={stock} />
-                    <DeleteStockDialog stockId={stock.stock_id} />
-                  </div>
+                <TableCell>{formatCurrency(stock.cost)}</TableCell>
+                <TableCell className="text-muted-foreground">{formatDate(stock.received_on)}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {stock.purchase_order_id ? (
+                    <Link
+                      href={`/admin/purchase-orders/${stock.purchase_order_id}`}
+                      className="text-primary underline underline-offset-4"
+                    >
+                      PO-{String(stock.purchase_order_id).padStart(5, "0")}
+                    </Link>
+                  ) : (
+                    "-"
+                  )}
                 </TableCell>
               </TableRow>
             ))

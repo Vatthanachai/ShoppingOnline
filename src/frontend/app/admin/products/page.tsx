@@ -21,9 +21,14 @@ export default async function AdminProductsPage({
 
   const client = await getApiClient();
   const [{ data: products, total_pages }, { data: categories }, { data: vendors }] = await Promise.all([
-    client.getProductsPage({ search: search || undefined, page_index: pageIndex, page_limit: PAGE_LIMIT }),
-    client.getCategoriesPage({ page_limit: 100 }),
-    client.getVendorsPage({ page_limit: 100 }),
+    client.getProductsPage({
+      search: search || undefined,
+      include_inactive: true,
+      page_index: pageIndex,
+      page_limit: PAGE_LIMIT,
+    }),
+    client.getCategoriesPage({ include_inactive: true, page_limit: 100 }),
+    client.getVendorsPage({ include_inactive: true, page_limit: 100 }),
   ]);
 
   function pageHref(targetPage: number) {
@@ -52,7 +57,8 @@ export default async function AdminProductsPage({
             <TableHead>ชื่อสินค้า</TableHead>
             <TableHead>หมวดหมู่</TableHead>
             <TableHead>ผู้ขาย</TableHead>
-            <TableHead>ราคาเริ่มต้น</TableHead>
+            <TableHead>ราคาขาย (รวมภาษี)</TableHead>
+            <TableHead>คงเหลือ</TableHead>
             <TableHead>สถานะ</TableHead>
             <TableHead className="text-right">การจัดการ</TableHead>
           </TableRow>
@@ -60,7 +66,7 @@ export default async function AdminProductsPage({
         <TableBody>
           {products.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center text-muted-foreground">
+              <TableCell colSpan={8} className="text-center text-muted-foreground">
                 ไม่พบสินค้า
               </TableCell>
             </TableRow>
@@ -71,9 +77,8 @@ export default async function AdminProductsPage({
                 <TableCell className="font-medium">{product.product_name}</TableCell>
                 <TableCell className="text-muted-foreground">{product.product_category_name}</TableCell>
                 <TableCell className="text-muted-foreground">{product.vendor_name}</TableCell>
-                <TableCell className="text-muted-foreground">
-                  {product.min_price != null ? formatCurrency(product.min_price) : "-"}
-                </TableCell>
+                <TableCell className="text-muted-foreground">{formatCurrency(product.price_with_tax)}</TableCell>
+                <TableCell className="text-muted-foreground">{product.available_quantity}</TableCell>
                 <TableCell>
                   <Badge variant={product.is_active ? "default" : "outline"}>
                     {product.is_active ? "ใช้งาน" : "ปิดใช้งาน"}

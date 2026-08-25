@@ -8,5 +8,13 @@ public class GetOrderResponse
     public DateTime OrderDate { get; set; }
     public decimal TotalAmount { get; set; }
     public OrderStatus Status { get; set; }
+
+    public string ShippingAddressLine1 { get; set; }
+    public string ShippingAddressLine2 { get; set; }
+    public string ShippingCity { get; set; }
+    public string ShippingState { get; set; }
+    public string ShippingPostalCode { get; set; }
+    public string ShippingCountry { get; set; }
+
     public List<OrderItemResponse> Items { get; set; } = [];
 }

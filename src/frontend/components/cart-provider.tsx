@@ -4,9 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 
 export interface CartItem {
   product_id: number;
-  vendor_id: number;
   product_name: string;
-  vendor_name: string;
   price: number;
   quantity: number;
 }
@@ -14,8 +12,8 @@ export interface CartItem {
 interface CartContextValue {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  updateQuantity: (productId: number, vendorId: number, quantity: number) => void;
-  removeItem: (productId: number, vendorId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  removeItem: (productId: number) => void;
   clear: () => void;
   totalItems: number;
   totalAmount: number;
@@ -24,8 +22,8 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 const STORAGE_KEY = "shopping-cart";
 
-function sameLine(a: { product_id: number; vendor_id: number }, b: { product_id: number; vendor_id: number }) {
-  return a.product_id === b.product_id && a.vendor_id === b.vendor_id;
+function sameLine(a: { product_id: number }, b: { product_id: number }) {
+  return a.product_id === b.product_id;
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -69,18 +67,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
     };
 
-    const updateQuantity = (productId: number, vendorId: number, quantity: number) => {
+    const updateQuantity = (productId: number, quantity: number) => {
       setItems((prev) =>
         quantity <= 0
-          ? prev.filter((line) => !sameLine(line, { product_id: productId, vendor_id: vendorId }))
-          : prev.map((line) =>
-              sameLine(line, { product_id: productId, vendor_id: vendorId }) ? { ...line, quantity } : line,
-            ),
+          ? prev.filter((line) => !sameLine(line, { product_id: productId }))
+          : prev.map((line) => (sameLine(line, { product_id: productId }) ? { ...line, quantity } : line)),
       );
     };
 
-    const removeItem = (productId: number, vendorId: number) => {
-      setItems((prev) => prev.filter((line) => !sameLine(line, { product_id: productId, vendor_id: vendorId })));
+    const removeItem = (productId: number) => {
+      setItems((prev) => prev.filter((line) => !sameLine(line, { product_id: productId })));
     };
 
     const clear = () => setItems([]);
