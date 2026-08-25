@@ -285,6 +285,10 @@ export class ApiClient {
     return this.request<string>(`/api/shipping_addresses/${id}`, { method: "DELETE" });
   }
 
+  setDefaultAddress(id: number) {
+    return this.request<ShippingAddress>(`/api/shipping_addresses/${id}/set_default`, { method: "POST" });
+  }
+
   // ----- Orders -----
 
   getOrdersPage(query?: { page_index?: number; page_limit?: number }) {

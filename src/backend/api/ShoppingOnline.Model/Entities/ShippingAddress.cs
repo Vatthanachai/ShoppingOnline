@@ -13,6 +13,7 @@ public class ShippingAddress : IAuditable
     public string State { get; set; }
     public string PostalCode { get; set; }
     public string Country { get; set; }
+    public bool IsDefault { get; set; }
     public string CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }
     public string? ModifiedBy { get; set; }

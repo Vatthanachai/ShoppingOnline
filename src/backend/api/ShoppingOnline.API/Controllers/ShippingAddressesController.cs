@@ -17,13 +17,15 @@ namespace ShoppingOnline.API.Controllers;
 /// <param name="createShippingAddressHandler"></param>
 /// <param name="updateShippingAddressHandler"></param>
 /// <param name="deleteShippingAddressHandler"></param>
+/// <param name="setDefaultShippingAddressHandler"></param>
 [Authorize, ApiController, ApiVersion("1.0"), Route("api/shipping_addresses")]
 public class ShippingAddressesController(
     IGetShippingAddressesHandler getShippingAddressesHandler,
     IGetShippingAddressHandler getShippingAddressHandler,
     ICreateShippingAddressHandler createShippingAddressHandler,
     IUpdateShippingAddressHandler updateShippingAddressHandler,
-    IDeleteShippingAddressHandler deleteShippingAddressHandler) : BaseApiController
+    IDeleteShippingAddressHandler deleteShippingAddressHandler,
+    ISetDefaultShippingAddressHandler setDefaultShippingAddressHandler) : BaseApiController
 {
     /// <summary>
     /// Retrieves a list of shipping addresses based on the provided request parameters.
@@ -75,4 +77,14 @@ public class ShippingAddressesController(
     public async Task<IActionResult> DeleteShippingAddressAsync(int id)
         => ReturnResponseWithHttpStatus(
             await deleteShippingAddressHandler.Handler(new DeleteShippingAddressRequest { ShippingAddressId = id }));
+
+    /// <summary>
+    /// Sets a shipping address as the caller's default, unsetting the default on any other one.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpPost("{id:int}/set_default")]
+    public async Task<IActionResult> SetDefaultShippingAddressAsync(int id)
+        => ReturnResponseWithHttpStatus(
+            await setDefaultShippingAddressHandler.Handler(new SetDefaultShippingAddressRequest { ShippingAddressId = id }));
 }

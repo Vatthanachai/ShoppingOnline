@@ -15,7 +15,8 @@ export function CheckoutForm({ addresses }: { addresses: ShippingAddress[] }) {
   const { items, totalAmount, clear } = useCart();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [shippingAddressId, setShippingAddressId] = useState<number>(addresses[0]?.shipping_address_id);
+  const defaultAddress = addresses.find((a) => a.is_default) ?? addresses[0];
+  const [shippingAddressId, setShippingAddressId] = useState<number>(defaultAddress?.shipping_address_id);
   const [isPending, startTransition] = useTransition();
 
   if (items.length === 0) {
@@ -80,7 +81,14 @@ export function CheckoutForm({ addresses }: { addresses: ShippingAddress[] }) {
               onChange={() => setShippingAddressId(address.shipping_address_id)}
             />
             <span>
-              <span className="block font-medium">{address.address_line1}</span>
+              <span className="flex items-center gap-2">
+                <span className="font-medium">{address.address_line1}</span>
+                {address.is_default && (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                    ค่าเริ่มต้น
+                  </span>
+                )}
+              </span>
               {address.address_line2 && <span className="block text-muted-foreground">{address.address_line2}</span>}
               <span className="block text-muted-foreground">
                 {[address.city, address.state, address.postal_code].filter(Boolean).join(" ")}

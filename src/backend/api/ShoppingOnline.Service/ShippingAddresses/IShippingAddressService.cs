@@ -12,4 +12,5 @@ public interface IShippingAddressService : IBaseService<ShippingAddress>
     Task<ServiceResponse> CreateShippingAddressAsync(CreateShippingAddressRequest request);
     Task<ServiceResponse> UpdateShippingAddressAsync(UpdateShippingAddressRequest request);
     Task<ServiceResponse> DeleteShippingAddressAsync(DeleteShippingAddressRequest request);
+    Task<ServiceResponse> SetDefaultShippingAddressAsync(SetDefaultShippingAddressRequest request);
 }

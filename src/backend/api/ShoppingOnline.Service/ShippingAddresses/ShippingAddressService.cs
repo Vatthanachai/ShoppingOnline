@@ -62,6 +62,10 @@ public class ShippingAddressService(
         var userId = httpContextAccessor.GetCurrentUserId();
         if (userId is null) return new Service401Response();
 
+        // The very first address a user adds becomes their default automatically, so
+        // checkout always has one preselected without asking them to set it explicitly.
+        var hasExistingAddress = await DbSet.AnyAsync(a => a.UserId == userId.Value);
+
         var shippingAddress = new ShippingAddress
         {
             UserId = userId.Value,
@@ -71,6 +75,7 @@ public class ShippingAddressService(
             State = request.State,
             PostalCode = request.PostalCode,
             Country = request.Country,
+            IsDefault = !hasExistingAddress,
             CreatedBy = "system",
             CreatedOn = DateTime.UtcNow,
         };
@@ -122,7 +127,25 @@ public class ShippingAddressService(
             a.ShippingAddressId == request.ShippingAddressId && a.UserId == userId.Value);
         if (shippingAddress is null) return new Service404Response();
 
+        var wasDefault = shippingAddress.IsDefault;
         DbSet.Remove(shippingAddress);
+
+        if (wasDefault)
+        {
+            // Keep exactly one default standing so checkout always has one preselected -
+            // promote whichever address the user added earliest among what's left.
+            var nextDefault = await DbSet
+                .Where(a => a.UserId == userId.Value && a.ShippingAddressId != shippingAddress.ShippingAddressId)
+                .OrderBy(a => a.ShippingAddressId)
+                .FirstOrDefaultAsync();
+
+            if (nextDefault is not null)
+            {
+                nextDefault.IsDefault = true;
+                nextDefault.ModifiedBy = "system";
+                nextDefault.ModifiedDate = DateTime.UtcNow;
+            }
+        }
 
         var committed = await UnitOfWork.CommitAsync();
         if (!committed)
@@ -131,5 +154,33 @@ public class ShippingAddressService(
         }
 
         return new Service200Response("Shipping address deleted successfully.");
+    }
+
+    public async Task<ServiceResponse> SetDefaultShippingAddressAsync(SetDefaultShippingAddressRequest request)
+    {
+        var userId = httpContextAccessor.GetCurrentUserId();
+        if (userId is null) return new Service401Response();
+
+        var addresses = await DbSet.Where(a => a.UserId == userId.Value).ToListAsync();
+        var target = addresses.FirstOrDefault(a => a.ShippingAddressId == request.ShippingAddressId);
+        if (target is null) return new Service404Response();
+
+        foreach (var address in addresses)
+        {
+            var shouldBeDefault = address.ShippingAddressId == request.ShippingAddressId;
+            if (address.IsDefault == shouldBeDefault) continue;
+
+            address.IsDefault = shouldBeDefault;
+            address.ModifiedBy = "system";
+            address.ModifiedDate = DateTime.UtcNow;
+        }
+
+        var committed = await UnitOfWork.CommitAsync();
+        if (!committed)
+        {
+            return new Service500Response(new Exception("Failed to set the default shipping address."));
+        }
+
+        return new Service200Response(target.Adapt<GetShippingAddressResponse>());
     }
 }
