@@ -1,0 +1,1492 @@
+<title>ShoppingOnline Reference</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #f5f6f4;
+    --surface: #ffffff;
+    --surface-2: #eef0ec;
+    --ink: #1b2420;
+    --muted: #58635c;
+    --line: #d9ddd4;
+    --accent: #3a6f5e;
+    --accent-ink: #e9f3ee;
+    --amber: #a8631f;
+    --amber-ink: #fbeee0;
+    --code-bg: #eef1ea;
+    --shadow: 0 1px 2px rgba(20, 30, 25, 0.06), 0 8px 24px rgba(20, 30, 25, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121613;
+      --surface: #181d19;
+      --surface-2: #1f251f;
+      --ink: #e9ede8;
+      --muted: #9aa89e;
+      --line: #2b332c;
+      --accent: #6cb89f;
+      --accent-ink: #12241d;
+      --amber: #e0a565;
+      --amber-ink: #2a1d0e;
+      --code-bg: #1c231d;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121613;
+    --surface: #181d19;
+    --surface-2: #1f251f;
+    --ink: #e9ede8;
+    --muted: #9aa89e;
+    --line: #2b332c;
+    --accent: #6cb89f;
+    --accent-ink: #12241d;
+    --amber: #e0a565;
+    --amber-ink: #2a1d0e;
+    --code-bg: #1c231d;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Public Sans", "Noto Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+  }
+  [data-lang="th"] .eyebrow,
+  [data-lang="th"] .kicker,
+  [data-lang="th"] .role,
+  [data-lang="th"] .card .tag,
+  [data-lang="th"] table.dict th {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  a { color: var(--accent); }
+
+  .mono { font-family: "IBM Plex Mono", ui-monospace, "Courier New", monospace; }
+
+  /* ---- top nav ---- */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+  }
+  .topnav .brand {
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    margin-right: 14px;
+    white-space: nowrap;
+    font-size: 0.95rem;
+  }
+  .topnav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .topnav a:hover { background: var(--surface-2); color: var(--ink); }
+  .topnav .spacer { flex: 1; }
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .lang-toggle button {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .lang-toggle button:hover { color: var(--ink); }
+  .lang-toggle button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .lang-toggle button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  section {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 64px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1, h2, h3 { text-wrap: balance; font-weight: 800; }
+  h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 0 0 6px;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 68ch;
+    margin: 0 0 36px;
+  }
+
+  /* ---- cover ---- */
+  .cover {
+    min-height: 82vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .cover .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .cover h1 {
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: 1.02;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+  .cover h1 span { color: var(--accent); }
+  .cover p {
+    max-width: 60ch;
+    color: var(--muted);
+    font-size: 1.15rem;
+    margin: 0 0 30px;
+  }
+  .cover .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pill {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--surface);
+  }
+
+  /* ---- generic grid / cards ---- */
+  .grid {
+    display: grid;
+    gap: 16px;
+  }
+  .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 760px) {
+    .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+  }
+  .card .tag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-ink);
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+  .card p { color: var(--muted); margin: 6px 0 0; font-size: 0.93rem; }
+
+  /* ---- architecture layers ---- */
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .layer {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    gap: 18px;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .layer .name {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  .layer .desc { color: var(--muted); font-size: 0.88rem; }
+  @media (max-width: 640px) {
+    .layer { grid-template-columns: 1fr; }
+  }
+
+  /* ---- flow steps (sales flow) ---- */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    counter-reset: step;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .step:first-child { border-top: none; }
+  .step .num {
+    counter-increment: step;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent);
+  }
+  .step .num::before {
+    content: counter(step, decimal-leading-zero);
+  }
+  .step h3 { margin-bottom: 4px; }
+  .step p { margin: 0; color: var(--muted); font-size: 0.92rem; max-width: 66ch; }
+
+  /* ---- function overview ---- */
+  .domain {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px 8px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .domain-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .domain-head h3 { margin: 0; }
+  .role {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--amber-ink);
+    color: var(--amber);
+    font-weight: 600;
+  }
+  .role.open { background: var(--surface-2); color: var(--muted); }
+  table.endpoints {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+  }
+  table.endpoints td {
+    padding: 8px 6px;
+    border-top: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.endpoints tr:first-child td { border-top: none; }
+  .verb {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+  .verb.GET { background: var(--accent-ink); color: var(--accent); }
+  .verb.POST { background: var(--amber-ink); color: var(--amber); }
+  .verb.PUT { background: color-mix(in srgb, var(--accent) 18%, var(--surface-2)); color: var(--ink); }
+  .verb.DELETE { background: color-mix(in srgb, #b23b3b 18%, var(--surface-2)); color: #b23b3b; }
+  .route { font-family: "IBM Plex Mono", monospace; font-size: 0.82rem; }
+  .fn { color: var(--muted); }
+
+  /* ---- data dictionary ---- */
+  .entity {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .entity-head {
+    padding: 14px 20px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .entity-head .name { font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 0.95rem; }
+  .entity-head .note { color: var(--muted); font-size: 0.82rem; }
+  table.dict {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  table.dict th {
+    text-align: left;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 10px 20px 6px;
+  }
+  table.dict td {
+    padding: 8px 20px;
+    border-top: 1px solid var(--line);
+  }
+  table.dict td.field { font-family: "IBM Plex Mono", monospace; font-weight: 600; }
+  table.dict td.type { color: var(--accent); font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; white-space: nowrap; }
+  table.dict td.note { color: var(--muted); }
+  .scroll-x { overflow-x: auto; }
+
+  /* ---- limitations ---- */
+  .gap-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+  }
+  .gap-card .gap-tag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #b23b3b;
+    background: color-mix(in srgb, #b23b3b 14%, var(--surface-2));
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+  [data-lang="th"] .gap-card .gap-tag { letter-spacing: 0; text-transform: none; }
+  .gap-card h3 { margin-bottom: 6px; }
+  .gap-card p { color: var(--muted); margin: 0; font-size: 0.92rem; }
+
+  /* ---- diagrams ---- */
+  .diagram-wrap {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+  pre.mermaid { margin: 0; }
+
+  footer {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 30px 24px 60px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    section { animation: rise 0.5s ease both; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<nav class="topnav">
+  <span class="brand">🛒 ShoppingOnline</span>
+  <a href="#overview" data-i18n="nav.overview">Overview</a>
+  <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+  <a href="#flow" data-i18n="nav.flow">Sales Flow</a>
+  <a href="#cart" data-i18n="nav.cart">Cart</a>
+  <a href="#lifecycle" data-i18n="nav.lifecycle">Order Lifecycle</a>
+  <a href="#functions" data-i18n="nav.functions">Functions</a>
+  <a href="#roles" data-i18n="nav.roles">Roles</a>
+  <a href="#frontend" data-i18n="nav.frontend">Frontend Pages</a>
+  <a href="#dictionary" data-i18n="nav.dictionary">Data Dictionary</a>
+  <a href="#dfd">DFD</a>
+  <a href="#erd" data-i18n="nav.erd">ER Diagram</a>
+  <a href="#deployment" data-i18n="nav.deployment">Deployment</a>
+  <a href="#limitations" data-i18n="nav.limitations">Limitations</a>
+  <span class="spacer"></span>
+  <div class="lang-toggle" role="group" aria-label="Language / ภาษา">
+    <button type="button" id="lang-en" aria-pressed="true">EN</button>
+    <button type="button" id="lang-th" aria-pressed="false">ไทย</button>
+  </div>
+</nav>
+
+<section class="cover">
+  <div class="kicker" data-i18n="cover.kicker">Internal Technical Reference — Aug 2026</div>
+  <h1>Shopping<span>Online</span></h1>
+  <p data-i18n="cover.desc">An e-commerce platform on a .NET 10 API and Next.js 16 storefront: user accounts, a vendor-backed product catalog, FIFO inventory fed by purchase orders, saved shipping addresses, and tax-inclusive order processing — plus an admin back office for the whole thing.</p>
+  <div class="meta">
+    <span class="pill">.NET 10 · ASP.NET Core</span>
+    <span class="pill">EF Core · PostgreSQL</span>
+    <span class="pill">Next.js 16 · React 19</span>
+    <span class="pill">Autofac · Mapster · Paseto</span>
+    <span class="pill">.NET Aspire orchestration</span>
+  </div>
+</section>
+
+<section id="overview">
+  <div class="eyebrow" data-i18n="ov.eyebrow">01 — Overview</div>
+  <h2 data-i18n="ov.h2">What the system does</h2>
+  <p class="lede" data-i18n="ov.lede">Two audiences share one platform: customers shopping a storefront, and admins running the back office behind it — same database, same domain rules, different surface.</p>
+  <div class="grid cols-3">
+    <div class="card">
+      <span class="tag" data-i18n="ov.c1.tag">Storefront</span>
+      <h3 data-i18n="ov.c1.h3">Customer shopping</h3>
+      <p data-i18n="ov.c1.p">Browse the catalog by category, place orders against a saved address, track order status, manage a profile.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="ov.c2.tag">Back office</span>
+      <h3 data-i18n="ov.c2.h3">Admin operations</h3>
+      <p data-i18n="ov.c2.p">Manage products, categories and vendors; issue and receive purchase orders; view read-only stock; activate or deactivate user accounts.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="ov.c3.tag">Engine</span>
+      <h3 data-i18n="ov.c3.h3">FIFO inventory</h3>
+      <p data-i18n="ov.c3.p">Stock is a ledger of received lots. Orders draw down the oldest lot first, atomically, across whichever vendor supplied it.</p>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="eyebrow" data-i18n="arch.eyebrow">02 — Architecture</div>
+  <h2 data-i18n="arch.h2">Layered solution structure</h2>
+  <p class="lede" data-i18n="arch.lede">A conventional four-layer backend (API → Handler → Service → Database/Model) plus two supporting apps: an Aspire AppHost for local orchestration and a Next.js frontend.</p>
+  <div class="layers">
+    <div class="layer"><div class="name">ShoppingOnline.API</div><div class="desc" data-i18n="arch.l1">ASP.NET Core controllers, versioned routes under <code class="mono">/api/*</code>, Swagger, entry point.</div></div>
+    <div class="layer"><div class="name">ShoppingOnline.Handler</div><div class="desc" data-i18n="arch.l2">One handler interface per use case (CQRS-style) — e.g. <code class="mono">ICreateOrderHandler</code>, <code class="mono">IReceivePurchaseOrderHandler</code>.</div></div>
+    <div class="layer"><div class="name">ShoppingOnline.Service</div><div class="desc" data-i18n="arch.l3">Domain services per aggregate (Orders, Products, Stocks, Vendors, Purchase Orders, …) holding the business rules.</div></div>
+    <div class="layer"><div class="name">ShoppingOnline.Database</div><div class="desc" data-i18n="arch.l4">EF Core <code class="mono">ShoppingDbContext</code>, table configs, migrations, unit of work.</div></div>
+    <div class="layer"><div class="name">ShoppingOnline.Model</div><div class="desc" data-i18n="arch.l5">Entities, DTOs, request/response contracts shared across layers.</div></div>
+    <div class="layer"><div class="name">Component.Abstractions / Data</div><div class="desc" data-i18n="arch.l6">Cross-cutting: Paseto auth, encryption, email, health checks, base DbContext/UoW.</div></div>
+    <div class="layer"><div class="name">AppHost + Frontend</div><div class="desc" data-i18n="arch.l7">.NET Aspire orchestrates Postgres + API + web; Next.js 16 / React 19 / Tailwind v4 storefront and <code class="mono">/admin</code>.</div></div>
+  </div>
+</section>
+
+<section id="flow">
+  <div class="eyebrow" data-i18n="flow.eyebrow">03 — Sales &amp; Inventory Flow</div>
+  <h2 data-i18n="flow.h2">How a product goes from vendor to customer</h2>
+  <p class="lede" data-i18n="flow.lede">The order in which these actually happen — inventory is filled before it can be sold, and every price or address is frozen the moment it's used.</p>
+  <div class="flow">
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s1.h">Admin creates a Purchase Order</h3><p data-i18n="flow.s1.p">Drafted against one vendor with quoted quantities and reference costs.</p></div></div>
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s2.h">PO is sent</h3><p data-i18n="flow.s2.p">Status moves to <em>Sent</em>; an email goes to the vendor's contact.</p></div></div>
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s3.h">Stock is received</h3><p data-i18n="flow.s3.p">Admin records what actually arrived — partial or multiple receipts per PO are supported. Each receipt creates a new dated <strong>Stock</strong> lot at its real cost.</p></div></div>
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s4.h">Customer places an order</h3><p data-i18n="flow.s4.p">Buys a product and quantity — never a vendor or lot directly. A saved shipping address is required.</p></div></div>
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s5.h">FIFO allocation fulfills the line</h3><p data-i18n="flow.s5.p">Oldest lot first across all vendors, with an atomic conditional decrement per lot so two customers can never oversell the same units.</p></div></div>
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s6.h">Price, tax and address are snapshotted</h3><p data-i18n="flow.s6.p"><code class="mono">Product.SellPrice</code> / <code class="mono">TaxRatePercent</code> and the address text are copied onto the order — later catalog or address edits never rewrite history.</p></div></div>
+    <div class="step"><div class="num"></div><div><h3 data-i18n="flow.s7.h">Confirmation email is sent</h3><p data-i18n="flow.s7.p">Customer receives confirmation; the order enters the <em>Pending → Confirmed → Shipped → Delivered</em> lifecycle (or <em>Cancelled</em>).</p></div></div>
+  </div>
+</section>
+
+<section id="cart">
+  <div class="eyebrow" data-i18n="cart.eyebrow">04 — Cart Mechanism</div>
+  <h2 data-i18n="cart.h2">A client-side cart, priced for real only at checkout</h2>
+  <p class="lede" data-i18n="cart.lede">The cart never touches the backend until checkout. It's a React context (<code class="mono">CartProvider</code>) backed by <code class="mono">localStorage</code> — nothing the server needs to know about, or trust, before then.</p>
+  <div class="grid cols-2">
+    <div class="card">
+      <span class="tag" data-i18n="cart.c1.tag">Storage</span>
+      <h3 data-i18n="cart.c1.h3">localStorage, not the server</h3>
+      <p data-i18n="cart.c1.p">Cart state lives entirely in the browser under the <code class="mono">shopping-cart</code> key, hydrated in a post-mount effect to avoid an SSR hydration mismatch — it survives a page refresh but not a different device or browser.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="cart.c2.tag">Contents</span>
+      <h3 data-i18n="cart.c2.h3">Product, price snapshot, quantity</h3>
+      <p data-i18n="cart.c2.p">Each line tracks <code class="mono">product_id</code>, <code class="mono">product_name</code>, <code class="mono">price</code> and <code class="mono">quantity</code>; adding the same product twice merges into the existing line instead of duplicating it.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="cart.c3.tag">Checkout</span>
+      <h3 data-i18n="cart.c3.h3">Only product_id and quantity are sent</h3>
+      <p data-i18n="cart.c3.p">The client-held price is display-only — the order request sends just <code class="mono">product_id</code>/<code class="mono">quantity</code> per line, and the server recomputes the real price and tax from <code class="mono">Product.SellPrice</code>/<code class="mono">TaxRatePercent</code> (see Sales Flow), so a stale or tampered client price can never reach an order.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="cart.c4.tag">Lifecycle</span>
+      <h3 data-i18n="cart.c4.h3">Cleared only after a successful order</h3>
+      <p data-i18n="cart.c4.p">The cart is cleared and the browser redirected to the new order's detail page only once the order request succeeds; a failed submission leaves the cart untouched so the customer can retry.</p>
+    </div>
+  </div>
+</section>
+
+<section id="lifecycle">
+  <div class="eyebrow" data-i18n="lc.eyebrow">05 — Order Lifecycle</div>
+  <h2 data-i18n="lc.h2">What the Status enum actually does today</h2>
+  <p class="lede" data-i18n="lc.lede">Only two transitions exist in the current code: an order is created as <code class="mono">Pending</code>, and it can be cancelled — while still <code class="mono">Pending</code> — back to <code class="mono">Cancelled</code>. <code class="mono">Confirmed</code>, <code class="mono">Shipped</code> and <code class="mono">Delivered</code> are declared on the enum but no handler, service or endpoint ever assigns them yet.</p>
+  <div class="diagram-wrap">
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> Pending: Customer places order (CreateOrderAsync)
+  Pending --> Cancelled: Customer cancels (only while still Pending)
+  Cancelled --> [*]
+
+  state "Confirmed" as Confirmed
+  state "Shipped" as Shipped
+  state "Delivered" as Delivered
+  Pending --> Confirmed: not wired to any handler yet
+  Confirmed --> Shipped: not wired to any handler yet
+  Shipped --> Delivered: not wired to any handler yet
+
+  classDef unreachable stroke-dasharray: 4 3
+  class Confirmed,Shipped,Delivered unreachable
+</pre>
+  </div>
+  <div class="grid cols-2" style="margin-top:16px;">
+    <div class="card">
+      <span class="tag" data-i18n="lc.c1.tag">Reachable today</span>
+      <h3 data-i18n="lc.c1.h3">Pending → Cancelled</h3>
+      <p data-i18n="lc.c1.p">The only two states any order can actually hold right now. Cancellation is only permitted while an order is still Pending.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="lc.c2.tag">Reserved, unreachable</span>
+      <h3 data-i18n="lc.c2.h3">Confirmed / Shipped / Delivered</h3>
+      <p data-i18n="lc.c2.p">Valid enum values with no code path that sets them — there's no admin fulfillment-tracking endpoint yet. See Known Limitations.</p>
+    </div>
+  </div>
+</section>
+
+<section id="functions">
+  <div class="eyebrow" data-i18n="fn.eyebrow">06 — Function Overview</div>
+  <h2 data-i18n="fn.h2">API surface by domain</h2>
+  <p class="lede" data-i18n="fn.lede">Ten controllers under <code class="mono">/api/*</code> (v1.0). Role tags reflect the controller's <code class="mono">[Authorize]</code> attribute.</p>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d1.name">Authorization &amp; Account</h3><span class="role open" data-i18n="fn.d1.role">Public / Self</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/scores/sign_up</td><td class="fn" data-i18n="fn.d1.r1">Register a new customer account</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/scores/sign_in</td><td class="fn" data-i18n="fn.d1.r2">Authenticate, issue a Paseto token</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/scores/change_password</td><td class="fn" data-i18n="fn.d1.r3">Change password (also clears must-change flag)</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/scores/forgot_password</td><td class="fn" data-i18n="fn.d1.r4">Trigger a password reset email</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/account/profile</td><td class="fn" data-i18n="fn.d1.r5">Get the signed-in user's profile</td></tr>
+      <tr><td><span class="verb PUT">PUT</span></td><td class="route">/api/account/profile</td><td class="fn" data-i18n="fn.d1.r6">Update the signed-in user's profile</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/account/deactivate</td><td class="fn" data-i18n="fn.d1.r7">Self-deactivate (blocked for Admin role)</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d2.name">Users</h3><span class="role" data-i18n="fn.d2.role">Admin only</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/users</td><td class="fn" data-i18n="fn.d2.r1">List users (paged/filtered)</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/users/{id}</td><td class="fn" data-i18n="fn.d2.r2">Get one user</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/users/{id}/activate</td><td class="fn" data-i18n="fn.d2.r3">Re-enable a deactivated account</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/users/{id}/deactivate</td><td class="fn" data-i18n="fn.d2.r4">Disable a user's account</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d3.name">Vendors</h3><span class="role open" data-i18n="fn.d3.role">Mixed</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/vendors</td><td class="fn" data-i18n="fn.d3.r1">List vendors</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/vendors/{id}</td><td class="fn" data-i18n="fn.d3.r2">Get one vendor</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/vendors</td><td class="fn" data-i18n="fn.d3.r3">Create a vendor</td></tr>
+      <tr><td><span class="verb PUT">PUT</span></td><td class="route">/api/vendors/{id}</td><td class="fn" data-i18n="fn.d3.r4">Update a vendor</td></tr>
+      <tr><td><span class="verb DELETE">DELETE</span></td><td class="route">/api/vendors/{id}</td><td class="fn" data-i18n="fn.d3.r5">Deactivate a vendor</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d4.name">Product Categories</h3><span class="role open" data-i18n="fn.d4.role">Mixed</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/product_categories</td><td class="fn" data-i18n="fn.d4.r1">List categories</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/product_categories/{id}</td><td class="fn" data-i18n="fn.d4.r2">Get one category</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/product_categories</td><td class="fn" data-i18n="fn.d4.r3">Create a category</td></tr>
+      <tr><td><span class="verb PUT">PUT</span></td><td class="route">/api/product_categories/{id}</td><td class="fn" data-i18n="fn.d4.r4">Update a category</td></tr>
+      <tr><td><span class="verb DELETE">DELETE</span></td><td class="route">/api/product_categories/{id}</td><td class="fn" data-i18n="fn.d4.r5">Deactivate a category</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d5.name">Products</h3><span class="role open" data-i18n="fn.d5.role">Mixed</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/products</td><td class="fn" data-i18n="fn.d5.r1">List / search the catalog</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/products/{id}</td><td class="fn" data-i18n="fn.d5.r2">Get one product</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/products</td><td class="fn" data-i18n="fn.d5.r3">Create a product</td></tr>
+      <tr><td><span class="verb PUT">PUT</span></td><td class="route">/api/products/{id}</td><td class="fn" data-i18n="fn.d5.r4">Update a product</td></tr>
+      <tr><td><span class="verb DELETE">DELETE</span></td><td class="route">/api/products/{id}</td><td class="fn" data-i18n="fn.d5.r5">Deactivate a product</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d6.name">Stocks</h3><span class="role open" data-i18n="fn.d6.role">Read-only</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/stocks</td><td class="fn" data-i18n="fn.d6.r1">List inventory lots</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/stocks/{id}</td><td class="fn" data-i18n="fn.d6.r2">Get one lot</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d7.name">Purchase Orders</h3><span class="role" data-i18n="fn.d7.role">Admin only</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/purchase_orders</td><td class="fn" data-i18n="fn.d7.r1">List purchase orders</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/purchase_orders/{id}</td><td class="fn" data-i18n="fn.d7.r2">Get one PO with its lines</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/purchase_orders</td><td class="fn" data-i18n="fn.d7.r3">Create a draft PO for a vendor</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/purchase_orders/{id}/send</td><td class="fn" data-i18n="fn.d7.r4">Send the PO (emails the vendor)</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/purchase_orders/{id}/receive</td><td class="fn" data-i18n="fn.d7.r5">Record a receipt, creating new Stock lot(s)</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d8.name">Shipping Addresses</h3><span class="role open" data-i18n="fn.d8.role">Self</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/shipping_addresses</td><td class="fn" data-i18n="fn.d8.r1">List my saved addresses</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/shipping_addresses/{id}</td><td class="fn" data-i18n="fn.d8.r2">Get one address</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/shipping_addresses</td><td class="fn" data-i18n="fn.d8.r3">Add an address</td></tr>
+      <tr><td><span class="verb PUT">PUT</span></td><td class="route">/api/shipping_addresses/{id}</td><td class="fn" data-i18n="fn.d8.r4">Edit an address</td></tr>
+      <tr><td><span class="verb DELETE">DELETE</span></td><td class="route">/api/shipping_addresses/{id}</td><td class="fn" data-i18n="fn.d8.r5">Remove an address</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/shipping_addresses/{id}/set_default</td><td class="fn" data-i18n="fn.d8.r6">Mark an address as default</td></tr>
+    </table>
+  </div>
+
+  <div class="domain">
+    <div class="domain-head"><h3 data-i18n="fn.d9.name">Orders</h3><span class="role open" data-i18n="fn.d9.role">Self</span></div>
+    <table class="endpoints">
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/orders</td><td class="fn" data-i18n="fn.d9.r1">List my orders</td></tr>
+      <tr><td><span class="verb GET">GET</span></td><td class="route">/api/orders/{id}</td><td class="fn" data-i18n="fn.d9.r2">Get one order with line items</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/orders</td><td class="fn" data-i18n="fn.d9.r3">Place an order (triggers FIFO allocation)</td></tr>
+      <tr><td><span class="verb POST">POST</span></td><td class="route">/api/orders/{id}/cancel</td><td class="fn" data-i18n="fn.d9.r4">Cancel an order</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="roles">
+  <div class="eyebrow" data-i18n="roles.eyebrow">07 — Role &amp; Permission Matrix</div>
+  <h2 data-i18n="roles.h2">Who can call what</h2>
+  <p class="lede" data-i18n="roles.lede">Controller-level <code class="mono">[Authorize]</code> plus every per-action override found in the code — several "public" controllers still lock down their write actions to Admin individually.</p>
+  <div class="diagram-wrap">
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="roles.th.controller">Controller</th><th data-i18n="roles.th.route">Route</th><th data-i18n="roles.th.access">Controller-level access</th><th data-i18n="roles.th.notes">Per-action notes</th></tr>
+      <tr><td class="field">Authorization</td><td class="type">/api/scores</td><td class="note" data-i18n="roles.r1.access">Public</td><td class="note" data-i18n="roles.r1.note"><code class="mono">change_password</code> requires sign-in even though the controller is otherwise public</td></tr>
+      <tr><td class="field">Account</td><td class="type">/api/account</td><td class="note" data-i18n="roles.r2.access">Authenticated (any signed-in user)</td><td class="note" data-i18n="roles.r2.note">Self-service only — acts on the caller's own account</td></tr>
+      <tr><td class="field">Users</td><td class="type">/api/users</td><td class="note" data-i18n="roles.r3.access">Admin only</td><td class="note"></td></tr>
+      <tr><td class="field">Vendors</td><td class="type">/api/vendors</td><td class="note" data-i18n="roles.r4.access">Public (read)</td><td class="note" data-i18n="roles.r4.note">Create / Update / Deactivate each require Admin individually</td></tr>
+      <tr><td class="field">Product Categories</td><td class="type">/api/product_categories</td><td class="note" data-i18n="roles.r5.access">Public (read)</td><td class="note" data-i18n="roles.r5.note">Create / Update / Deactivate each require Admin individually</td></tr>
+      <tr><td class="field">Products</td><td class="type">/api/products</td><td class="note" data-i18n="roles.r6.access">Public (read)</td><td class="note" data-i18n="roles.r6.note">Create / Update / Deactivate each require Admin individually</td></tr>
+      <tr><td class="field">Stocks</td><td class="type">/api/stocks</td><td class="note" data-i18n="roles.r7.access">Public</td><td class="note" data-i18n="roles.r7.note">Read-only endpoints — no writes exist to restrict</td></tr>
+      <tr><td class="field">Purchase Orders</td><td class="type">/api/purchase_orders</td><td class="note" data-i18n="roles.r8.access">Admin only</td><td class="note"></td></tr>
+      <tr><td class="field">Shipping Addresses</td><td class="type">/api/shipping_addresses</td><td class="note" data-i18n="roles.r9.access">Authenticated</td><td class="note" data-i18n="roles.r9.note">Self-service only — acts on the caller's own addresses</td></tr>
+      <tr><td class="field">Orders</td><td class="type">/api/orders</td><td class="note" data-i18n="roles.r10.access">Authenticated</td><td class="note" data-i18n="roles.r10.note">Self-service only — acts on the caller's own orders</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="frontend">
+  <div class="eyebrow" data-i18n="fe.eyebrow">08 — Frontend Page &amp; Route Overview</div>
+  <h2 data-i18n="fe.h2">Storefront and admin pages, and who can reach them</h2>
+  <p class="lede" data-i18n="fe.lede">The Next.js app has three access tiers, enforced in two places: <code class="mono">proxy.ts</code> middleware gates whole route prefixes on a session cookie being present, and <code class="mono">admin/layout.tsx</code> additionally checks the signed-in profile's role server-side.</p>
+
+  <div class="grid cols-2" style="margin-bottom:20px;">
+    <div class="card">
+      <span class="tag" data-i18n="fe.c1.tag">Tier 1</span>
+      <h3 data-i18n="fe.c1.h3">Public pages</h3>
+      <p data-i18n="fe.c1.p">No gate at all — catalog browsing and auth pages are open to anyone.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="fe.c2.tag">Tier 2</span>
+      <h3 data-i18n="fe.c2.h3">Session-gated</h3>
+      <p data-i18n="fe.c2.p"><code class="mono">proxy.ts</code> redirects to <code class="mono">/sign-in?next=...</code> when <code class="mono">session_token</code> is missing — it only checks the cookie is present, not that the token still validates.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="fe.c3.tag">Tier 3</span>
+      <h3 data-i18n="fe.c3.h3">Admin-gated</h3>
+      <p data-i18n="fe.c3.p">Everything under <code class="mono">/admin</code> additionally requires <code class="mono">profile.role === "Admin"</code>, checked in <code class="mono">admin/layout.tsx</code>; anyone else is redirected to <code class="mono">/</code>.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="fe.c4.tag">Forced redirect</span>
+      <h3 data-i18n="fe.c4.h3">Must-change-password</h3>
+      <p data-i18n="fe.c4.p">If the <code class="mono">must_change_password</code> cookie is set, every navigation is redirected to <code class="mono">/change-password</code> until it's cleared.</p>
+    </div>
+  </div>
+
+  <div class="diagram-wrap">
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="fe.th.route">Route</th><th data-i18n="fe.th.page">Page</th><th data-i18n="fe.th.access">Access</th><th data-i18n="fe.th.notes">Notes</th></tr>
+      <tr><td class="field">/</td><td class="type" data-i18n="fe.r1.page">Home / catalog landing</td><td class="note" data-i18n="fe.tier.public">Public</td><td class="note"></td></tr>
+      <tr><td class="field">/products</td><td class="type" data-i18n="fe.r2.page">Product listing</td><td class="note" data-i18n="fe.tier.public">Public</td><td class="note"></td></tr>
+      <tr><td class="field">/products/[id]</td><td class="type" data-i18n="fe.r3.page">Product detail</td><td class="note" data-i18n="fe.tier.public">Public</td><td class="note"></td></tr>
+      <tr><td class="field">/sign-in</td><td class="type" data-i18n="fe.r4.page">Sign in</td><td class="note" data-i18n="fe.tier.public">Public</td><td class="note"></td></tr>
+      <tr><td class="field">/sign-up</td><td class="type" data-i18n="fe.r5.page">Sign up</td><td class="note" data-i18n="fe.tier.public">Public</td><td class="note"></td></tr>
+      <tr><td class="field">/cart</td><td class="type" data-i18n="fe.r6.page">Shopping cart</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note"></td></tr>
+      <tr><td class="field">/checkout</td><td class="type" data-i18n="fe.r7.page">Checkout</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note" data-i18n="fe.r7.note">Needs at least one saved shipping address</td></tr>
+      <tr><td class="field">/orders</td><td class="type" data-i18n="fe.r8.page">Order history</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note"></td></tr>
+      <tr><td class="field">/orders/[id]</td><td class="type" data-i18n="fe.r9.page">Order detail</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note"></td></tr>
+      <tr><td class="field">/account</td><td class="type" data-i18n="fe.r10.page">Profile</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note"></td></tr>
+      <tr><td class="field">/account/addresses</td><td class="type" data-i18n="fe.r11.page">Saved addresses</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note"></td></tr>
+      <tr><td class="field">/change-password</td><td class="type" data-i18n="fe.r12.page">Change password</td><td class="note" data-i18n="fe.tier.session">Session</td><td class="note" data-i18n="fe.r12.note">Forced destination whenever must_change_password is set</td></tr>
+      <tr><td class="field">/admin</td><td class="type" data-i18n="fe.r13.page">Admin dashboard</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/products</td><td class="type" data-i18n="fe.r14.page">Manage products</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/categories</td><td class="type" data-i18n="fe.r15.page">Manage categories</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/vendors</td><td class="type" data-i18n="fe.r16.page">Manage vendors</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/stocks</td><td class="type" data-i18n="fe.r17.page">Inventory (read-only)</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/purchase-orders</td><td class="type" data-i18n="fe.r18.page">Manage purchase orders</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/purchase-orders/[id]</td><td class="type" data-i18n="fe.r19.page">Purchase order detail</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/admin/users</td><td class="type" data-i18n="fe.r20.page">Manage users</td><td class="note" data-i18n="fe.tier.admin">Admin</td><td class="note"></td></tr>
+      <tr><td class="field">/api/[...path]</td><td class="type" data-i18n="fe.r21.page">API proxy route</td><td class="note">—</td><td class="note" data-i18n="fe.r21.note">Forwards browser requests to the backend API</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="dictionary">
+  <div class="eyebrow" data-i18n="dd.eyebrow">09 — Data Dictionary</div>
+  <h2 data-i18n="dd.h2">Core entities</h2>
+  <p class="lede" data-i18n="dd.lede">Eleven persisted entities plus two status enums. All auditable entities carry <code class="mono">CreatedBy / CreatedOn / ModifiedBy / ModifiedDate</code> — omitted below for brevity.</p>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">User</span><span class="note" data-i18n="dd.e1.note">customer or admin account</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">UserId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">Name / Email / Phone</td><td class="type">string</td><td class="note" data-i18n="dd.e1.n1">Email is the sign-in identifier</td></tr>
+      <tr><td class="field">PasswordHash / SecurityStamp</td><td class="type">string</td><td class="note" data-i18n="dd.e1.n2">Hash storage; stamp invalidates old tokens</td></tr>
+      <tr><td class="field">MustChangePassword</td><td class="type">bool</td><td class="note" data-i18n="dd.e1.n3">Forces reset on next sign-in</td></tr>
+      <tr><td class="field">Role</td><td class="type">UserRole</td><td class="note">Customer | Admin</td></tr>
+      <tr><td class="field">IsActive</td><td class="type">bool</td><td class="note" data-i18n="dd.e1.n4">Deactivated accounts can't sign in</td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">Vendor</span><span class="note" data-i18n="dd.e2.note">supplier</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">VendorId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">VendorName / ContactPerson</td><td class="type">string</td><td class="note"></td></tr>
+      <tr><td class="field">Email / Phone</td><td class="type">string</td><td class="note" data-i18n="dd.e2.n1">Email receives PO notifications</td></tr>
+      <tr><td class="field">IsActive</td><td class="type">bool</td><td class="note"></td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">ProductCategory</span><span class="note" data-i18n="dd.e3.note">catalog grouping</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">ProductCategoryId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">CategoryName / Description</td><td class="type">string</td><td class="note"></td></tr>
+      <tr><td class="field">IsActive</td><td class="type">bool</td><td class="note"></td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">Product</span><span class="note" data-i18n="dd.e4.note">catalog item, one vendor + one category</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">ProductId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">ProductCategoryId / VendorId</td><td class="type">int, FK</td><td class="note"></td></tr>
+      <tr><td class="field">ProductCode / ProductName / Description</td><td class="type">string</td><td class="note"></td></tr>
+      <tr><td class="field">ImagePath</td><td class="type">string?</td><td class="note" data-i18n="dd.e4.n1">Optional catalog image</td></tr>
+      <tr><td class="field">SellPrice</td><td class="type">decimal</td><td class="note" data-i18n="dd.e4.n2">Customer-facing price — never a lot's cost</td></tr>
+      <tr><td class="field">TaxRatePercent</td><td class="type">decimal</td><td class="note" data-i18n="dd.e4.n3">Default 7%</td></tr>
+      <tr><td class="field">IsActive</td><td class="type">bool</td><td class="note" data-i18n="dd.e4.n4">Deactivated products stay orderable in history</td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">Stock</span><span class="note" data-i18n="dd.e5.note">one received inventory lot</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">StockId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">ProductId / VendorId</td><td class="type">int, FK</td><td class="note"></td></tr>
+      <tr><td class="field">Quantity</td><td class="type">int</td><td class="note" data-i18n="dd.e5.n1">Remaining units in this lot</td></tr>
+      <tr><td class="field">Cost</td><td class="type">decimal</td><td class="note" data-i18n="dd.e5.n2">Actual unit cost paid — distinct from SellPrice</td></tr>
+      <tr><td class="field">PurchaseOrderItemId</td><td class="type">int?, FK</td><td class="note" data-i18n="dd.e5.n3">Null for seed/manual lots</td></tr>
+      <tr><td class="field">CreatedOn</td><td class="type">datetime</td><td class="note" data-i18n="dd.e5.n4">FIFO ordering key — oldest lot drawn down first</td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">PurchaseOrder / PurchaseOrderItem</span><span class="note" data-i18n="dd.e6.note">order to a vendor for new stock</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">PurchaseOrderId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">VendorId</td><td class="type">int, FK</td><td class="note"></td></tr>
+      <tr><td class="field">Status</td><td class="type">PurchaseOrderStatus</td><td class="note" data-i18n="dd.e6.n1">Draft → Sent → PartiallyReceived → Received (or Cancelled)</td></tr>
+      <tr><td class="field">SentOn</td><td class="type">datetime?</td><td class="note"></td></tr>
+      <tr><td class="field">— Item: QuantityOrdered</td><td class="type">int</td><td class="note" data-i18n="dd.e6.n2">Per product line</td></tr>
+      <tr><td class="field">— Item: QuantityReceived</td><td class="type">int</td><td class="note" data-i18n="dd.e6.n3">Running total across receipts</td></tr>
+      <tr><td class="field">— Item: UnitCostQuoted</td><td class="type">decimal?</td><td class="note" data-i18n="dd.e6.n4">Reference only; real cost set per Stock lot</td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">ShippingAddress</span><span class="note" data-i18n="dd.e7.note">saved delivery address</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">ShippingAddressId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">UserId</td><td class="type">int, FK</td><td class="note"></td></tr>
+      <tr><td class="field">AddressLine1/2, City, State, PostalCode, Country</td><td class="type">string</td><td class="note"></td></tr>
+      <tr><td class="field">IsDefault</td><td class="type">bool</td><td class="note" data-i18n="dd.e7.n1">One default per user</td></tr>
+    </table></div>
+  </div>
+
+  <div class="entity">
+    <div class="entity-head"><span class="name">Order / OrderItem / OrderItemAllocation</span><span class="note" data-i18n="dd.e8.note">a placed order and its FIFO fulfillment trail</span></div>
+    <div class="scroll-x"><table class="dict">
+      <tr><th data-i18n="dd.th.field">Field</th><th data-i18n="dd.th.type">Type</th><th data-i18n="dd.th.notes">Notes</th></tr>
+      <tr><td class="field">OrderId</td><td class="type">int, PK</td><td class="note"></td></tr>
+      <tr><td class="field">UserId</td><td class="type">int, FK</td><td class="note"></td></tr>
+      <tr><td class="field">OrderDate / TotalAmount</td><td class="type">datetime / decimal</td><td class="note"></td></tr>
+      <tr><td class="field">Status</td><td class="type">OrderStatus</td><td class="note" data-i18n="dd.e8.n1">Pending → Confirmed → Shipped → Delivered (or Cancelled)</td></tr>
+      <tr><td class="field">ShippingAddressLine1…Country</td><td class="type">string</td><td class="note" data-i18n="dd.e8.n2">Snapshot copied at checkout, not a live FK</td></tr>
+      <tr><td class="field">— Item: ProductId, Quantity</td><td class="type">int</td><td class="note"></td></tr>
+      <tr><td class="field">— Item: UnitPrice, TaxRatePercent</td><td class="type">decimal</td><td class="note" data-i18n="dd.e8.n3">Snapshot of Product at order time</td></tr>
+      <tr><td class="field">— Allocation: StockId, VendorId, Quantity</td><td class="type">int</td><td class="note" data-i18n="dd.e8.n4">Which lot(s)/vendor(s) FIFO-filled this line</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="dfd">
+  <div class="eyebrow" data-i18n="dfd.eyebrow">10 — Data Flow Diagram</div>
+  <h2 data-i18n="dfd.h2">Context &amp; process-level flow</h2>
+  <p class="lede" data-i18n="dfd.lede">External actors, the system's main processes, and the data stores each one reads or writes.</p>
+  <p class="lede" style="margin-top:-24px; font-size:0.82rem;" data-i18n="dfd.note">Diagram labels are kept in English for consistency with the codebase's identifiers.</p>
+  <div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TB
+  Customer(["Customer"])
+  Admin(["Admin"])
+  VendorInbox(["Vendor (email)"])
+
+  subgraph SYS["ShoppingOnline System"]
+    direction TB
+    P1["1.0 Auth & Account"]
+    P2["2.0 Catalog Management\n(Products / Categories / Vendors)"]
+    P3["3.0 Purchasing & Inventory\n(Purchase Orders → Stock)"]
+    P4["4.0 Order Processing\n(FIFO allocation, pricing, tax)"]
+    P5["5.0 Shipping Address Mgmt"]
+  end
+
+  DS1[("Users")]
+  DS2[("Products / Categories / Vendors")]
+  DS3[("Stock Lots")]
+  DS4[("Purchase Orders")]
+  DS5[("Shipping Addresses")]
+  DS6[("Orders")]
+
+  Customer -- "sign up / sign in / profile" --> P1
+  Admin -- "manage users" --> P1
+  P1 <-- "credentials, roles" --> DS1
+
+  Admin -- "create / edit catalog" --> P2
+  Customer -- "browse catalog" --> P2
+  P2 <--> DS2
+
+  Admin -- "create, send, receive PO" --> P3
+  P3 -- "PO email" --> VendorInbox
+  P3 <--> DS4
+  P3 -- "new lot" --> DS3
+
+  Customer -- "place / cancel order" --> P4
+  P4 -- "read product price" --> DS2
+  P4 -- "FIFO decrement" --> DS3
+  P4 -- "read default address" --> DS5
+  P4 <--> DS6
+  P4 -- "confirmation email" --> Customer
+
+  Customer -- "manage addresses" --> P5
+  P5 <--> DS5
+</pre>
+  </div>
+</section>
+
+<section id="erd">
+  <div class="eyebrow" data-i18n="erd.eyebrow">11 — Entity Relationship Diagram</div>
+  <h2 data-i18n="erd.h2">Relational model</h2>
+  <p class="lede" data-i18n="erd.lede">FIFO fulfillment is why <code class="mono">OrderItemAllocation</code> exists: it's the join that lets one order line draw from several stock lots (and therefore vendors).</p>
+  <div class="diagram-wrap">
+<pre class="mermaid">
+erDiagram
+  USER ||--o{ ORDER : places
+  USER ||--o{ SHIPPING_ADDRESS : saves
+  VENDOR ||--o{ PRODUCT : supplies
+  VENDOR ||--o{ STOCK : "stocked by"
+  VENDOR ||--o{ PURCHASE_ORDER : "issued to"
+  VENDOR ||--o{ ORDER_ITEM_ALLOCATION : fulfilled_by
+  PRODUCT_CATEGORY ||--o{ PRODUCT : groups
+  PRODUCT ||--o{ STOCK : "has lots"
+  PRODUCT ||--o{ PURCHASE_ORDER_ITEM : "ordered as"
+  PRODUCT ||--o{ ORDER_ITEM : "sold as"
+  PURCHASE_ORDER ||--o{ PURCHASE_ORDER_ITEM : lines
+  PURCHASE_ORDER_ITEM ||--o{ STOCK : "received as"
+  ORDER ||--o{ ORDER_ITEM : contains
+  ORDER_ITEM ||--o{ ORDER_ITEM_ALLOCATION : "fulfilled via"
+  STOCK ||--o{ ORDER_ITEM_ALLOCATION : "drawn from"
+
+  USER {
+    int UserId PK
+    string Email
+    UserRole Role
+    bool IsActive
+  }
+  VENDOR {
+    int VendorId PK
+    string VendorName
+    string Email
+  }
+  PRODUCT_CATEGORY {
+    int ProductCategoryId PK
+    string CategoryName
+  }
+  PRODUCT {
+    int ProductId PK
+    int ProductCategoryId FK
+    int VendorId FK
+    decimal SellPrice
+    decimal TaxRatePercent
+  }
+  STOCK {
+    int StockId PK
+    int ProductId FK
+    int VendorId FK
+    int PurchaseOrderItemId FK
+    int Quantity
+    decimal Cost
+  }
+  PURCHASE_ORDER {
+    int PurchaseOrderId PK
+    int VendorId FK
+    PurchaseOrderStatus Status
+  }
+  PURCHASE_ORDER_ITEM {
+    int PurchaseOrderItemId PK
+    int PurchaseOrderId FK
+    int ProductId FK
+    int QuantityOrdered
+    int QuantityReceived
+  }
+  SHIPPING_ADDRESS {
+    int ShippingAddressId PK
+    int UserId FK
+    bool IsDefault
+  }
+  ORDER {
+    int OrderId PK
+    int UserId FK
+    OrderStatus Status
+    decimal TotalAmount
+  }
+  ORDER_ITEM {
+    int OrderItemId PK
+    int OrderId FK
+    int ProductId FK
+    decimal UnitPrice
+    int Quantity
+  }
+  ORDER_ITEM_ALLOCATION {
+    int OrderItemAllocationId PK
+    int OrderItemId FK
+    int StockId FK
+    int VendorId FK
+    int Quantity
+  }
+</pre>
+  </div>
+</section>
+
+<section id="deployment">
+  <div class="eyebrow" data-i18n="dep.eyebrow">12 — Deployment &amp; Operations</div>
+  <h2 data-i18n="dep.h2">How it runs locally</h2>
+  <p class="lede" data-i18n="dep.lede">Orchestrated end-to-end by the Aspire AppHost — no manual container or migration steps.</p>
+  <div class="grid cols-2">
+    <div class="card">
+      <span class="tag" data-i18n="dep.c1.tag">Orchestration</span>
+      <h3 data-i18n="dep.c1.h3">.NET Aspire AppHost</h3>
+      <p data-i18n="dep.c1.p">Wires up a Postgres resource (<code class="mono">shoppingDb</code>), the API project (<code class="mono">shoppingonline-api</code>) referencing it, and the Next.js frontend (<code class="mono">shoppingonline-frontend</code>) referencing the API — one <code class="mono">dotnet run</code> starts all three.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="dep.c2.tag">Health &amp; docs</span>
+      <h3 data-i18n="dep.c2.h3">/health and /docs</h3>
+      <p data-i18n="dep.c2.p">A health-check endpoint is mapped at <code class="mono">/health</code>; API documentation is served by Scalar at <code class="mono">/docs</code>, backed by the OpenAPI document. Both are development-only.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="dep.c3.tag">Configuration</span>
+      <h3 data-i18n="dep.c3.h3">Minimal committed settings</h3>
+      <p data-i18n="dep.c3.p"><code class="mono">appsettings.json</code> commits only <code class="mono">AllowedHosts</code> — connection strings, Paseto keys and email/SMTP settings are supplied by Aspire/environment at run time, not checked into source.</p>
+    </div>
+    <div class="card">
+      <span class="tag" data-i18n="dep.c4.tag">Migrations</span>
+      <h3 data-i18n="dep.c4.h3">Applied automatically</h3>
+      <p data-i18n="dep.c4.p">EF Core migrations run on startup, and a seeded admin account plus demo catalog are created on first run (see README).</p>
+    </div>
+  </div>
+</section>
+
+<section id="limitations">
+  <div class="eyebrow" data-i18n="lim.eyebrow">13 — Known Limitations</div>
+  <h2 data-i18n="lim.h2">What isn't built yet</h2>
+  <p class="lede" data-i18n="lim.lede">Observed gaps in the current code — not a roadmap, just what's actually missing today.</p>
+  <div class="grid cols-2">
+    <div class="gap-card">
+      <span class="gap-tag" data-i18n="lim.c1.tag">Not implemented</span>
+      <h3 data-i18n="lim.c1.h3">No payment or refund flow</h3>
+      <p data-i18n="lim.c1.p">No payment-related file exists anywhere in the codebase, and <code class="mono">OrderStatus</code> has no <code class="mono">Refunded</code> or <code class="mono">Returned</code> state.</p>
+    </div>
+    <div class="gap-card">
+      <span class="gap-tag" data-i18n="lim.c2.tag">Not implemented</span>
+      <h3 data-i18n="lim.c2.h3">Fulfillment tracking stops at Cancelled</h3>
+      <p data-i18n="lim.c2.p"><code class="mono">Confirmed</code>, <code class="mono">Shipped</code> and <code class="mono">Delivered</code> exist as enum values but no admin endpoint or handler ever sets them — see Order Lifecycle.</p>
+    </div>
+    <div class="gap-card">
+      <span class="gap-tag" data-i18n="lim.c3.tag">Not implemented</span>
+      <h3 data-i18n="lim.c3.h3">No product reviews or ratings</h3>
+      <p data-i18n="lim.c3.p">No review or rating entity, table, or controller exists in the model or API.</p>
+    </div>
+    <div class="gap-card">
+      <span class="gap-tag" data-i18n="lim.c4.tag">Basic only</span>
+      <h3 data-i18n="lim.c4.h3">Catalog search is simple filtering</h3>
+      <p data-i18n="lim.c4.p"><code class="mono">GetProductsRequest</code> filters by search text, category, vendor and active status with paging — there's no full-text search engine behind it.</p>
+    </div>
+  </div>
+</section>
+
+<footer data-i18n="footer.text">
+  ShoppingOnline · internal reference · generated from src/backend source — entities, controllers, README
+</footer>
+
+<script>
+  const I18N = {
+    "nav.overview": { en: "Overview", th: "ภาพรวม" },
+    "nav.architecture": { en: "Architecture", th: "สถาปัตยกรรม" },
+    "nav.flow": { en: "Sales Flow", th: "กระบวนการขาย" },
+    "nav.functions": { en: "Functions", th: "ฟังก์ชัน" },
+    "nav.dictionary": { en: "Data Dictionary", th: "พจนานุกรมข้อมูล" },
+    "nav.erd": { en: "ER Diagram", th: "ER Diagram" },
+
+    "cover.kicker": { en: "Internal Technical Reference — Aug 2026", th: "เอกสารอ้างอิงทางเทคนิคภายใน — ส.ค. 2569" },
+    "cover.desc": {
+      en: "An e-commerce platform on a .NET 10 API and Next.js 16 storefront: user accounts, a vendor-backed product catalog, FIFO inventory fed by purchase orders, saved shipping addresses, and tax-inclusive order processing — plus an admin back office for the whole thing.",
+      th: "แพลตฟอร์มอีคอมเมิร์ซบน .NET 10 API และหน้าร้าน Next.js 16: บัญชีผู้ใช้, แคตตาล็อกสินค้าที่ผูกกับผู้ขาย, สต็อกสินค้าแบบ FIFO ที่เติมผ่านใบสั่งซื้อ, ที่อยู่จัดส่งที่บันทึกไว้ และการประมวลผลคำสั่งซื้อแบบรวมภาษี — พร้อมระบบหลังบ้านที่ดูแลทั้งหมดนี้"
+    },
+
+    "ov.eyebrow": { en: "01 — Overview", th: "01 — ภาพรวม" },
+    "ov.h2": { en: "What the system does", th: "ระบบนี้ทำอะไรได้บ้าง" },
+    "ov.lede": {
+      en: "Two audiences share one platform: customers shopping a storefront, and admins running the back office behind it — same database, same domain rules, different surface.",
+      th: "ผู้ใช้งานสองกลุ่มใช้แพลตฟอร์มเดียวกัน: ลูกค้าที่ช้อปปิ้งหน้าร้าน และแอดมินที่ดูแลระบบหลังบ้าน — ฐานข้อมูลเดียวกัน กฎธุรกิจเดียวกัน แต่คนละหน้าจอ"
+    },
+    "ov.c1.tag": { en: "Storefront", th: "หน้าร้าน" },
+    "ov.c1.h3": { en: "Customer shopping", th: "การช้อปปิ้งของลูกค้า" },
+    "ov.c1.p": { en: "Browse the catalog by category, place orders against a saved address, track order status, manage a profile.", th: "เลือกดูแคตตาล็อกตามหมวดหมู่ สั่งซื้อโดยใช้ที่อยู่ที่บันทึกไว้ ติดตามสถานะคำสั่งซื้อ และจัดการโปรไฟล์ส่วนตัว" },
+    "ov.c2.tag": { en: "Back office", th: "ระบบหลังบ้าน" },
+    "ov.c2.h3": { en: "Admin operations", th: "การทำงานของแอดมิน" },
+    "ov.c2.p": { en: "Manage products, categories and vendors; issue and receive purchase orders; view read-only stock; activate or deactivate user accounts.", th: "จัดการสินค้า หมวดหมู่ และผู้ขาย; ออกและรับใบสั่งซื้อ; ดูสต็อกสินค้าแบบอ่านอย่างเดียว; เปิด/ปิดการใช้งานบัญชีผู้ใช้" },
+    "ov.c3.tag": { en: "Engine", th: "กลไกหลัก" },
+    "ov.c3.h3": { en: "FIFO inventory", th: "สต็อกสินค้าแบบ FIFO" },
+    "ov.c3.p": { en: "Stock is a ledger of received lots. Orders draw down the oldest lot first, atomically, across whichever vendor supplied it.", th: "สต็อกคือบัญชีของล็อตสินค้าที่รับเข้ามา คำสั่งซื้อจะดึงจากล็อตที่เก่าที่สุดก่อนเสมอแบบอะตอมมิก โดยไม่สนว่าล็อตนั้นมาจากผู้ขายรายใด" },
+
+    "arch.eyebrow": { en: "02 — Architecture", th: "02 — สถาปัตยกรรม" },
+    "arch.h2": { en: "Layered solution structure", th: "โครงสร้างโซลูชันแบบแบ่งชั้น" },
+    "arch.lede": {
+      en: "A conventional four-layer backend (API → Handler → Service → Database/Model) plus two supporting apps: an Aspire AppHost for local orchestration and a Next.js frontend.",
+      th: "แบ็กเอนด์แบบสี่ชั้นตามแนวทางทั่วไป (API → Handler → Service → Database/Model) พร้อมแอปสนับสนุนอีกสองตัว: Aspire AppHost สำหรับควบคุมการรันในเครื่อง และหน้าบ้าน Next.js"
+    },
+    "arch.l1": { en: 'ASP.NET Core controllers, versioned routes under <code class="mono">/api/*</code>, Swagger, entry point.', th: 'คอนโทรลเลอร์ของ ASP.NET Core, เส้นทางที่มีเวอร์ชันภายใต้ <code class="mono">/api/*</code>, Swagger, จุดเริ่มต้นของแอป' },
+    "arch.l2": { en: 'One handler interface per use case (CQRS-style) — e.g. <code class="mono">ICreateOrderHandler</code>, <code class="mono">IReceivePurchaseOrderHandler</code>.', th: 'อินเทอร์เฟซ handler หนึ่งตัวต่อหนึ่ง use case (สไตล์ CQRS) — เช่น <code class="mono">ICreateOrderHandler</code>, <code class="mono">IReceivePurchaseOrderHandler</code>' },
+    "arch.l3": { en: "Domain services per aggregate (Orders, Products, Stocks, Vendors, Purchase Orders, …) holding the business rules.", th: "บริการ (service) ของแต่ละ aggregate (Orders, Products, Stocks, Vendors, Purchase Orders ฯลฯ) ที่เก็บกฎทางธุรกิจไว้" },
+    "arch.l4": { en: 'EF Core <code class="mono">ShoppingDbContext</code>, table configs, migrations, unit of work.', th: 'EF Core <code class="mono">ShoppingDbContext</code>, การตั้งค่าตาราง, migrations, unit of work' },
+    "arch.l5": { en: "Entities, DTOs, request/response contracts shared across layers.", th: "เอนทิตี, DTOs, สัญญา request/response ที่ใช้ร่วมกันทุกชั้น" },
+    "arch.l6": { en: "Cross-cutting: Paseto auth, encryption, email, health checks, base DbContext/UoW.", th: "งานตัดขวาง (cross-cutting): การยืนยันตัวตนด้วย Paseto, การเข้ารหัส, อีเมล, health check, DbContext/UoW พื้นฐาน" },
+    "arch.l7": { en: '.NET Aspire orchestrates Postgres + API + web; Next.js 16 / React 19 / Tailwind v4 storefront and <code class="mono">/admin</code>.', th: '.NET Aspire ควบคุมการรัน Postgres + API + เว็บ; หน้าร้าน Next.js 16 / React 19 / Tailwind v4 และหน้า <code class="mono">/admin</code>' },
+
+    "flow.eyebrow": { en: "03 — Sales &amp; Inventory Flow", th: "03 — กระบวนการขายและสต็อกสินค้า" },
+    "flow.h2": { en: "How a product goes from vendor to customer", th: "สินค้าเดินทางจากผู้ขายถึงลูกค้าอย่างไร" },
+    "flow.lede": { en: "The order in which these actually happen — inventory is filled before it can be sold, and every price or address is frozen the moment it's used.", th: 'ลำดับขั้นตอนที่เกิดขึ้นจริง — สต็อกต้องถูกเติมก่อนจึงจะขายได้ และราคา/ที่อยู่ทุกครั้งจะถูก "ล็อก" ไว้ ณ ตอนที่ใช้งาน' },
+    "flow.s1.h": { en: "Admin creates a Purchase Order", th: "แอดมินสร้างใบสั่งซื้อ (Purchase Order)" },
+    "flow.s1.p": { en: "Drafted against one vendor with quoted quantities and reference costs.", th: "ร่างใบสั่งซื้อกับผู้ขายรายหนึ่ง พร้อมระบุจำนวนและราคาต้นทุนอ้างอิง" },
+    "flow.s2.h": { en: "PO is sent", th: "ส่งใบสั่งซื้อ" },
+    "flow.s2.p": { en: "Status moves to <em>Sent</em>; an email goes to the vendor's contact.", th: "สถานะเปลี่ยนเป็น <em>Sent</em>; ระบบส่งอีเมลไปยังผู้ติดต่อของผู้ขาย" },
+    "flow.s3.h": { en: "Stock is received", th: "รับสินค้าเข้าสต็อก" },
+    "flow.s3.p": { en: "Admin records what actually arrived — partial or multiple receipts per PO are supported. Each receipt creates a new dated <strong>Stock</strong> lot at its real cost.", th: "แอดมินบันทึกจำนวนที่รับจริง — รองรับการรับแบบบางส่วนหรือหลายครั้งต่อหนึ่งใบสั่งซื้อ แต่ละครั้งที่รับจะสร้างล็อต <strong>Stock</strong> ใหม่พร้อมวันที่และต้นทุนจริง" },
+    "flow.s4.h": { en: "Customer places an order", th: "ลูกค้าสั่งซื้อสินค้า" },
+    "flow.s4.p": { en: "Buys a product and quantity — never a vendor or lot directly. A saved shipping address is required.", th: "เลือกซื้อสินค้าและจำนวน โดยไม่เลือกผู้ขายหรือล็อตโดยตรง ต้องมีที่อยู่จัดส่งที่บันทึกไว้ก่อนจึงสั่งซื้อได้" },
+    "flow.s5.h": { en: "FIFO allocation fulfills the line", th: "ระบบจัดสรรแบบ FIFO เติมเต็มรายการสั่งซื้อ" },
+    "flow.s5.p": { en: "Oldest lot first across all vendors, with an atomic conditional decrement per lot so two customers can never oversell the same units.", th: "ดึงจากล็อตที่เก่าที่สุดก่อนโดยไม่สนผู้ขาย พร้อมการลดจำนวนแบบมีเงื่อนไขในระดับอะตอมมิกต่อล็อต เพื่อป้องกันไม่ให้ลูกค้าสองคนซื้อสินค้าชิ้นเดียวกันซ้ำซ้อน" },
+    "flow.s6.h": { en: "Price, tax and address are snapshotted", th: "ราคา ภาษี และที่อยู่ถูกบันทึกสำเนา (snapshot)" },
+    "flow.s6.p": { en: '<code class="mono">Product.SellPrice</code> / <code class="mono">TaxRatePercent</code> and the address text are copied onto the order — later catalog or address edits never rewrite history.', th: 'ค่า <code class="mono">Product.SellPrice</code> / <code class="mono">TaxRatePercent</code> และข้อความที่อยู่จะถูกคัดลอกลงในคำสั่งซื้อ — การแก้ไขแคตตาล็อกหรือที่อยู่ภายหลังจะไม่ส่งผลย้อนหลังต่อประวัติ' },
+    "flow.s7.h": { en: "Confirmation email is sent", th: "ส่งอีเมลยืนยัน" },
+    "flow.s7.p": { en: "Customer receives confirmation; the order enters the <em>Pending → Confirmed → Shipped → Delivered</em> lifecycle (or <em>Cancelled</em>).", th: "ลูกค้าจะได้รับอีเมลยืนยัน; คำสั่งซื้อเข้าสู่วงจรสถานะ <em>Pending → Confirmed → Shipped → Delivered</em> (หรือ <em>Cancelled</em>)" },
+
+    "fn.eyebrow": { en: "06 — Function Overview", th: "06 — ภาพรวมฟังก์ชันการทำงาน" },
+    "fn.h2": { en: "API surface by domain", th: "รายการ API แยกตามโดเมน" },
+    "fn.lede": { en: 'Ten controllers under <code class="mono">/api/*</code> (v1.0). Role tags reflect the controller\'s <code class="mono">[Authorize]</code> attribute.', th: 'คอนโทรลเลอร์ทั้งหมด 10 ตัวภายใต้ <code class="mono">/api/*</code> (v1.0) แท็กสิทธิ์การเข้าถึงสะท้อนมาจาก attribute <code class="mono">[Authorize]</code> ของแต่ละคอนโทรลเลอร์' },
+
+    "fn.d1.name": { en: "Authorization &amp; Account", th: "การยืนยันตัวตนและบัญชี" },
+    "fn.d1.role": { en: "Public / Self", th: "สาธารณะ / เจ้าของบัญชี" },
+    "fn.d1.r1": { en: "Register a new customer account", th: "สมัครสมาชิกลูกค้าใหม่" },
+    "fn.d1.r2": { en: "Authenticate, issue a Paseto token", th: "ยืนยันตัวตนและออก Paseto token" },
+    "fn.d1.r3": { en: "Change password (also clears must-change flag)", th: "เปลี่ยนรหัสผ่าน (ล้างสถานะ must-change ด้วย)" },
+    "fn.d1.r4": { en: "Trigger a password reset email", th: "ส่งอีเมลสำหรับรีเซ็ตรหัสผ่าน" },
+    "fn.d1.r5": { en: "Get the signed-in user's profile", th: "ดูโปรไฟล์ของผู้ใช้ที่ล็อกอินอยู่" },
+    "fn.d1.r6": { en: "Update the signed-in user's profile", th: "แก้ไขโปรไฟล์ของผู้ใช้ที่ล็อกอินอยู่" },
+    "fn.d1.r7": { en: "Self-deactivate (blocked for Admin role)", th: "ปิดการใช้งานบัญชีตนเอง (แอดมินทำไม่ได้)" },
+
+    "fn.d2.name": { en: "Users", th: "ผู้ใช้งาน" },
+    "fn.d2.role": { en: "Admin only", th: "แอดมินเท่านั้น" },
+    "fn.d2.r1": { en: "List users (paged/filtered)", th: "แสดงรายการผู้ใช้ (แบ่งหน้า/กรองได้)" },
+    "fn.d2.r2": { en: "Get one user", th: "ดูข้อมูลผู้ใช้รายบุคคล" },
+    "fn.d2.r3": { en: "Re-enable a deactivated account", th: "เปิดใช้งานบัญชีที่ถูกปิดอีกครั้ง" },
+    "fn.d2.r4": { en: "Disable a user's account", th: "ปิดการใช้งานบัญชีผู้ใช้" },
+
+    "fn.d3.name": { en: "Vendors", th: "ผู้ขาย" },
+    "fn.d3.role": { en: "Mixed", th: "ผสมสิทธิ์" },
+    "fn.d3.r1": { en: "List vendors", th: "แสดงรายการผู้ขาย" },
+    "fn.d3.r2": { en: "Get one vendor", th: "ดูข้อมูลผู้ขายรายเดียว" },
+    "fn.d3.r3": { en: "Create a vendor", th: "เพิ่มผู้ขายใหม่" },
+    "fn.d3.r4": { en: "Update a vendor", th: "แก้ไขข้อมูลผู้ขาย" },
+    "fn.d3.r5": { en: "Deactivate a vendor", th: "ปิดการใช้งานผู้ขาย" },
+
+    "fn.d4.name": { en: "Product Categories", th: "หมวดหมู่สินค้า" },
+    "fn.d4.role": { en: "Mixed", th: "ผสมสิทธิ์" },
+    "fn.d4.r1": { en: "List categories", th: "แสดงรายการหมวดหมู่" },
+    "fn.d4.r2": { en: "Get one category", th: "ดูข้อมูลหมวดหมู่รายเดียว" },
+    "fn.d4.r3": { en: "Create a category", th: "เพิ่มหมวดหมู่ใหม่" },
+    "fn.d4.r4": { en: "Update a category", th: "แก้ไขหมวดหมู่" },
+    "fn.d4.r5": { en: "Deactivate a category", th: "ปิดการใช้งานหมวดหมู่" },
+
+    "fn.d5.name": { en: "Products", th: "สินค้า" },
+    "fn.d5.role": { en: "Mixed", th: "ผสมสิทธิ์" },
+    "fn.d5.r1": { en: "List / search the catalog", th: "แสดงรายการ/ค้นหาแคตตาล็อกสินค้า" },
+    "fn.d5.r2": { en: "Get one product", th: "ดูข้อมูลสินค้ารายเดียว" },
+    "fn.d5.r3": { en: "Create a product", th: "เพิ่มสินค้าใหม่" },
+    "fn.d5.r4": { en: "Update a product", th: "แก้ไขข้อมูลสินค้า" },
+    "fn.d5.r5": { en: "Deactivate a product", th: "ปิดการใช้งานสินค้า" },
+
+    "fn.d6.name": { en: "Stocks", th: "สต็อกสินค้า" },
+    "fn.d6.role": { en: "Read-only", th: "อ่านอย่างเดียว" },
+    "fn.d6.r1": { en: "List inventory lots", th: "แสดงรายการล็อตสต็อกสินค้า" },
+    "fn.d6.r2": { en: "Get one lot", th: "ดูข้อมูลล็อตสินค้ารายเดียว" },
+
+    "fn.d7.name": { en: "Purchase Orders", th: "ใบสั่งซื้อ" },
+    "fn.d7.role": { en: "Admin only", th: "แอดมินเท่านั้น" },
+    "fn.d7.r1": { en: "List purchase orders", th: "แสดงรายการใบสั่งซื้อ" },
+    "fn.d7.r2": { en: "Get one PO with its lines", th: "ดูใบสั่งซื้อพร้อมรายการสินค้า" },
+    "fn.d7.r3": { en: "Create a draft PO for a vendor", th: "สร้างใบสั่งซื้อฉบับร่างให้ผู้ขาย" },
+    "fn.d7.r4": { en: "Send the PO (emails the vendor)", th: "ส่งใบสั่งซื้อ (ส่งอีเมลถึงผู้ขาย)" },
+    "fn.d7.r5": { en: "Record a receipt, creating new Stock lot(s)", th: "บันทึกการรับสินค้า พร้อมสร้างล็อตสต็อกใหม่" },
+
+    "fn.d8.name": { en: "Shipping Addresses", th: "ที่อยู่จัดส่ง" },
+    "fn.d8.role": { en: "Self", th: "เจ้าของบัญชี" },
+    "fn.d8.r1": { en: "List my saved addresses", th: "แสดงที่อยู่ที่บันทึกไว้ของฉัน" },
+    "fn.d8.r2": { en: "Get one address", th: "ดูข้อมูลที่อยู่รายเดียว" },
+    "fn.d8.r3": { en: "Add an address", th: "เพิ่มที่อยู่ใหม่" },
+    "fn.d8.r4": { en: "Edit an address", th: "แก้ไขที่อยู่" },
+    "fn.d8.r5": { en: "Remove an address", th: "ลบที่อยู่" },
+    "fn.d8.r6": { en: "Mark an address as default", th: "ตั้งเป็นที่อยู่เริ่มต้น" },
+
+    "fn.d9.name": { en: "Orders", th: "คำสั่งซื้อ" },
+    "fn.d9.role": { en: "Self", th: "เจ้าของบัญชี" },
+    "fn.d9.r1": { en: "List my orders", th: "แสดงคำสั่งซื้อของฉัน" },
+    "fn.d9.r2": { en: "Get one order with line items", th: "ดูคำสั่งซื้อพร้อมรายการสินค้า" },
+    "fn.d9.r3": { en: "Place an order (triggers FIFO allocation)", th: "สั่งซื้อสินค้า (เริ่มการจัดสรรแบบ FIFO)" },
+    "fn.d9.r4": { en: "Cancel an order", th: "ยกเลิกคำสั่งซื้อ" },
+
+    "dd.eyebrow": { en: "09 — Data Dictionary", th: "09 — พจนานุกรมข้อมูล" },
+    "dd.h2": { en: "Core entities", th: "เอนทิตีหลัก" },
+    "dd.lede": { en: 'Eleven persisted entities plus two status enums. All auditable entities carry <code class="mono">CreatedBy / CreatedOn / ModifiedBy / ModifiedDate</code> — omitted below for brevity.', th: 'เอนทิตีที่บันทึกจริง 11 ตัว บวก enum สถานะอีก 2 ตัว ทุกเอนทิตีที่ตรวจสอบย้อนหลังได้จะมีฟิลด์ <code class="mono">CreatedBy / CreatedOn / ModifiedBy / ModifiedDate</code> — ละไว้ในตารางด้านล่างเพื่อความกระชับ' },
+    "dd.th.field": { en: "Field", th: "ฟิลด์" },
+    "dd.th.type": { en: "Type", th: "ชนิดข้อมูล" },
+    "dd.th.notes": { en: "Notes", th: "หมายเหตุ" },
+
+    "dd.e1.note": { en: "customer or admin account", th: "บัญชีลูกค้าหรือแอดมิน" },
+    "dd.e1.n1": { en: "Email is the sign-in identifier", th: "อีเมลใช้เป็นตัวระบุสำหรับเข้าสู่ระบบ" },
+    "dd.e1.n2": { en: "Hash storage; stamp invalidates old tokens", th: "เก็บเป็นค่าแฮช; stamp ใช้ยกเลิก token เก่า" },
+    "dd.e1.n3": { en: "Forces reset on next sign-in", th: "บังคับให้ตั้งรหัสผ่านใหม่ในการล็อกอินครั้งถัดไป" },
+    "dd.e1.n4": { en: "Deactivated accounts can't sign in", th: "บัญชีที่ถูกปิดจะเข้าสู่ระบบไม่ได้" },
+
+    "dd.e2.note": { en: "supplier", th: "ผู้ขาย/ซัพพลายเออร์" },
+    "dd.e2.n1": { en: "Email receives PO notifications", th: "อีเมลนี้จะได้รับการแจ้งเตือนใบสั่งซื้อ" },
+
+    "dd.e3.note": { en: "catalog grouping", th: "การจัดกลุ่มแคตตาล็อก" },
+
+    "dd.e4.note": { en: "catalog item, one vendor + one category", th: "รายการสินค้า มีผู้ขายและหมวดหมู่อย่างละหนึ่ง" },
+    "dd.e4.n1": { en: "Optional catalog image", th: "รูปภาพแคตตาล็อก (มีหรือไม่มีก็ได้)" },
+    "dd.e4.n2": { en: "Customer-facing price — never a lot's cost", th: "ราคาที่ลูกค้าเห็น — ไม่ใช่ต้นทุนของล็อตสินค้า" },
+    "dd.e4.n3": { en: "Default 7%", th: "ค่าเริ่มต้น 7%" },
+    "dd.e4.n4": { en: "Deactivated products stay orderable in history", th: "สินค้าที่ปิดการใช้งานยังคงอยู่ในประวัติคำสั่งซื้อเดิมได้" },
+
+    "dd.e5.note": { en: "one received inventory lot", th: "ล็อตสต็อกสินค้าที่รับเข้ามาหนึ่งล็อต" },
+    "dd.e5.n1": { en: "Remaining units in this lot", th: "จำนวนคงเหลือในล็อตนี้" },
+    "dd.e5.n2": { en: "Actual unit cost paid — distinct from SellPrice", th: "ต้นทุนต่อหน่วยที่จ่ายจริง — คนละค่ากับ SellPrice" },
+    "dd.e5.n3": { en: "Null for seed/manual lots", th: "เป็นค่าว่างสำหรับล็อตที่สร้างจากข้อมูลตั้งต้นหรือป้อนเอง" },
+    "dd.e5.n4": { en: "FIFO ordering key — oldest lot drawn down first", th: "คีย์สำหรับเรียงลำดับ FIFO — ล็อตที่เก่าที่สุดจะถูกดึงออกก่อน" },
+
+    "dd.e6.note": { en: "order to a vendor for new stock", th: "ใบสั่งซื้อไปยังผู้ขายเพื่อรับสต็อกใหม่" },
+    "dd.e6.n1": { en: "Draft → Sent → PartiallyReceived → Received (or Cancelled)", th: "Draft → Sent → PartiallyReceived → Received (หรือ Cancelled)" },
+    "dd.e6.n2": { en: "Per product line", th: "ต่อหนึ่งรายการสินค้า" },
+    "dd.e6.n3": { en: "Running total across receipts", th: "ยอดสะสมจากการรับสินค้าทุกครั้ง" },
+    "dd.e6.n4": { en: "Reference only; real cost set per Stock lot", th: "ใช้เป็นข้อมูลอ้างอิงเท่านั้น ต้นทุนจริงกำหนดที่ระดับล็อตสต็อก" },
+
+    "dd.e7.note": { en: "saved delivery address", th: "ที่อยู่จัดส่งที่บันทึกไว้" },
+    "dd.e7.n1": { en: "One default per user", th: "มีที่อยู่เริ่มต้นได้หนึ่งรายการต่อผู้ใช้หนึ่งคน" },
+
+    "dd.e8.note": { en: "a placed order and its FIFO fulfillment trail", th: "คำสั่งซื้อที่วางแล้วและเส้นทางการจัดสรรแบบ FIFO" },
+    "dd.e8.n1": { en: "Pending → Confirmed → Shipped → Delivered (or Cancelled)", th: "Pending → Confirmed → Shipped → Delivered (หรือ Cancelled)" },
+    "dd.e8.n2": { en: "Snapshot copied at checkout, not a live FK", th: "คัดลอกไว้ตอนชำระเงิน ไม่ใช่ FK ที่เชื่อมโยงสด" },
+    "dd.e8.n3": { en: "Snapshot of Product at order time", th: "สำเนาข้อมูลสินค้า ณ เวลาที่สั่งซื้อ" },
+    "dd.e8.n4": { en: "Which lot(s)/vendor(s) FIFO-filled this line", th: "ล็อต/ผู้ขายที่ใช้เติมเต็มรายการนี้ด้วยวิธี FIFO" },
+
+    "dfd.eyebrow": { en: "10 — Data Flow Diagram", th: "10 — แผนภาพการไหลของข้อมูล (DFD)" },
+    "dfd.h2": { en: "Context &amp; process-level flow", th: "การไหลของข้อมูลระดับ context และ process" },
+    "dfd.lede": { en: "External actors, the system's main processes, and the data stores each one reads or writes.", th: "ผู้เกี่ยวข้องภายนอก กระบวนการหลักของระบบ และแหล่งข้อมูลที่แต่ละกระบวนการอ่านหรือเขียน" },
+    "dfd.note": { en: "Diagram labels are kept in English for consistency with the codebase's identifiers.", th: "ป้ายกำกับในแผนภาพคงไว้เป็นภาษาอังกฤษ เพื่อให้สอดคล้องกับชื่อจริงในซอร์สโค้ด" },
+
+    "erd.eyebrow": { en: "11 — Entity Relationship Diagram", th: "11 — แผนภาพความสัมพันธ์ (ER Diagram)" },
+    "erd.h2": { en: "Relational model", th: "โมเดลความสัมพันธ์ของข้อมูล" },
+    "erd.lede": { en: 'FIFO fulfillment is why <code class="mono">OrderItemAllocation</code> exists: it\'s the join that lets one order line draw from several stock lots (and therefore vendors).', th: 'เหตุผลที่มี <code class="mono">OrderItemAllocation</code> ก็เพราะการเติมเต็มแบบ FIFO: มันคือตารางเชื่อมที่ทำให้หนึ่งรายการสั่งซื้อดึงจากหลายล็อตสต็อก (และหลายผู้ขาย) ได้' },
+
+    "footer.text": { en: "ShoppingOnline · internal reference · generated from src/backend source — entities, controllers, README", th: "ShoppingOnline · เอกสารอ้างอิงภายใน · สร้างจากซอร์สโค้ด src/backend — entities, controllers, README" },
+
+    "nav.lifecycle": { en: "Order Lifecycle", th: "วงจรคำสั่งซื้อ" },
+    "nav.roles": { en: "Roles", th: "สิทธิ์การเข้าถึง" },
+    "nav.deployment": { en: "Deployment", th: "การติดตั้งใช้งาน" },
+    "nav.limitations": { en: "Limitations", th: "ข้อจำกัด" },
+    "nav.frontend": { en: "Frontend Pages", th: "หน้าเว็บฝั่งผู้ใช้" },
+    "nav.cart": { en: "Cart", th: "ตะกร้าสินค้า" },
+
+    "cart.eyebrow": { en: "04 — Cart Mechanism", th: "04 — กลไกตะกร้าสินค้า" },
+    "cart.h2": { en: "A client-side cart, priced for real only at checkout", th: "ตะกร้าฝั่งไคลเอนต์ที่คิดราคาจริงตอนชำระเงินเท่านั้น" },
+    "cart.lede": {
+      en: 'The cart never touches the backend until checkout. It\'s a React context (<code class="mono">CartProvider</code>) backed by <code class="mono">localStorage</code> — nothing the server needs to know about, or trust, before then.',
+      th: 'ตะกร้าจะไม่ติดต่อกับ backend เลยจนกว่าจะถึงขั้นตอนชำระเงิน มันเป็น React context (<code class="mono">CartProvider</code>) ที่เก็บข้อมูลผ่าน <code class="mono">localStorage</code> — เซิร์ฟเวอร์ไม่จำเป็นต้องรู้หรือเชื่อถือข้อมูลนี้เลยก่อนถึงจุดนั้น'
+    },
+    "cart.c1.tag": { en: "Storage", th: "การเก็บข้อมูล" },
+    "cart.c1.h3": { en: "localStorage, not the server", th: "เก็บที่ localStorage ไม่ใช่เซิร์ฟเวอร์" },
+    "cart.c1.p": { en: 'Cart state lives entirely in the browser under the <code class="mono">shopping-cart</code> key, hydrated in a post-mount effect to avoid an SSR hydration mismatch — it survives a page refresh but not a different device or browser.', th: 'สถานะตะกร้าอยู่ในเบราว์เซอร์ทั้งหมดภายใต้คีย์ <code class="mono">shopping-cart</code> โดยโหลดข้อมูลหลัง mount เพื่อเลี่ยงปัญหา SSR hydration mismatch — ตะกร้าจะอยู่รอดเมื่อรีเฟรชหน้า แต่ไม่ข้ามอุปกรณ์หรือเบราว์เซอร์อื่น' },
+    "cart.c2.tag": { en: "Contents", th: "ข้อมูลที่เก็บ" },
+    "cart.c2.h3": { en: "Product, price snapshot, quantity", th: "สินค้า ราคา (สำเนา) และจำนวน" },
+    "cart.c2.p": { en: 'Each line tracks <code class="mono">product_id</code>, <code class="mono">product_name</code>, <code class="mono">price</code> and <code class="mono">quantity</code>; adding the same product twice merges into the existing line instead of duplicating it.', th: 'แต่ละรายการเก็บ <code class="mono">product_id</code>, <code class="mono">product_name</code>, <code class="mono">price</code> และ <code class="mono">quantity</code>; ถ้าเพิ่มสินค้าเดิมซ้ำจะรวมเข้ากับรายการเดิมแทนที่จะสร้างรายการใหม่' },
+    "cart.c3.tag": { en: "Checkout", th: "ตอนชำระเงิน" },
+    "cart.c3.h3": { en: "Only product_id and quantity are sent", th: "ส่งแค่ product_id และ quantity เท่านั้น" },
+    "cart.c3.p": { en: 'The client-held price is display-only — the order request sends just <code class="mono">product_id</code>/<code class="mono">quantity</code> per line, and the server recomputes the real price and tax from <code class="mono">Product.SellPrice</code>/<code class="mono">TaxRatePercent</code> (see Sales Flow), so a stale or tampered client price can never reach an order.', th: 'ราคาที่เก็บไว้ฝั่งไคลเอนต์ใช้แสดงผลเท่านั้น — คำขอสั่งซื้อส่งแค่ <code class="mono">product_id</code>/<code class="mono">quantity</code> ต่อรายการ แล้วเซิร์ฟเวอร์จะคำนวณราคาและภาษีจริงใหม่จาก <code class="mono">Product.SellPrice</code>/<code class="mono">TaxRatePercent</code> (ดูหัวข้อกระบวนการขาย) ราคาเก่าหรือที่ถูกแก้ไขจากฝั่งไคลเอนต์จึงเข้าไปถึงคำสั่งซื้อจริงไม่ได้เลย' },
+    "cart.c4.tag": { en: "Lifecycle", th: "วงจรการใช้งาน" },
+    "cart.c4.h3": { en: "Cleared only after a successful order", th: "ล้างตะกร้าก็ต่อเมื่อสั่งซื้อสำเร็จ" },
+    "cart.c4.p": { en: "The cart is cleared and the browser redirected to the new order's detail page only once the order request succeeds; a failed submission leaves the cart untouched so the customer can retry.", th: "ตะกร้าจะถูกล้างและเบราว์เซอร์จะพาไปหน้ารายละเอียดคำสั่งซื้อใหม่ก็ต่อเมื่อคำขอสั่งซื้อสำเร็จเท่านั้น; ถ้าส่งไม่สำเร็จตะกร้าจะยังอยู่เหมือนเดิมเพื่อให้ลูกค้าลองใหม่ได้" },
+
+    "fe.eyebrow": { en: "08 — Frontend Page &amp; Route Overview", th: "08 — ภาพรวมหน้าเว็บและเส้นทาง" },
+    "fe.h2": { en: "Storefront and admin pages, and who can reach them", th: "หน้าร้านและหน้าแอดมิน ใครเข้าถึงได้บ้าง" },
+    "fe.lede": {
+      en: 'The Next.js app has three access tiers, enforced in two places: <code class="mono">proxy.ts</code> middleware gates whole route prefixes on a session cookie being present, and <code class="mono">admin/layout.tsx</code> additionally checks the signed-in profile\'s role server-side.',
+      th: 'แอป Next.js มีระดับการเข้าถึง 3 ชั้น บังคับใช้ใน 2 จุด: middleware <code class="mono">proxy.ts</code> ปิดกั้นทั้งกลุ่มเส้นทางโดยเช็คว่ามี session cookie หรือไม่ และ <code class="mono">admin/layout.tsx</code> เช็คเพิ่มว่า role ของโปรไฟล์ที่ล็อกอินอยู่เป็นอะไร (ฝั่งเซิร์ฟเวอร์)'
+    },
+    "fe.c1.tag": { en: "Tier 1", th: "ชั้นที่ 1" },
+    "fe.c1.h3": { en: "Public pages", th: "หน้าสาธารณะ" },
+    "fe.c1.p": { en: "No gate at all — catalog browsing and auth pages are open to anyone.", th: "ไม่มีการปิดกั้นใดๆ — หน้าดูแคตตาล็อกและหน้ายืนยันตัวตนเปิดให้ทุกคนเข้าถึงได้" },
+    "fe.c2.tag": { en: "Tier 2", th: "ชั้นที่ 2" },
+    "fe.c2.h3": { en: "Session-gated", th: "ต้องมีเซสชัน" },
+    "fe.c2.p": { en: '<code class="mono">proxy.ts</code> redirects to <code class="mono">/sign-in?next=...</code> when <code class="mono">session_token</code> is missing — it only checks the cookie is present, not that the token still validates.', th: '<code class="mono">proxy.ts</code> จะพาไปที่ <code class="mono">/sign-in?next=...</code> เมื่อไม่มีคุกกี้ <code class="mono">session_token</code> — ตรวจแค่ว่ามีคุกกี้อยู่หรือไม่ ไม่ได้ตรวจว่า token ยังใช้ได้จริงหรือเปล่า' },
+    "fe.c3.tag": { en: "Tier 3", th: "ชั้นที่ 3" },
+    "fe.c3.h3": { en: "Admin-gated", th: "ต้องเป็นแอดมิน" },
+    "fe.c3.p": { en: 'Everything under <code class="mono">/admin</code> additionally requires <code class="mono">profile.role === "Admin"</code>, checked in <code class="mono">admin/layout.tsx</code>; anyone else is redirected to <code class="mono">/</code>.', th: 'ทุกหน้าภายใต้ <code class="mono">/admin</code> ต้องมี <code class="mono">profile.role === "Admin"</code> เพิ่มเติม โดยตรวจใน <code class="mono">admin/layout.tsx</code>; ถ้าไม่ใช่แอดมินจะถูกพากลับไปที่ <code class="mono">/</code>' },
+    "fe.c4.tag": { en: "Forced redirect", th: "บังคับเปลี่ยนหน้า" },
+    "fe.c4.h3": { en: "Must-change-password", th: "ต้องเปลี่ยนรหัสผ่านก่อน" },
+    "fe.c4.p": { en: 'If the <code class="mono">must_change_password</code> cookie is set, every navigation is redirected to <code class="mono">/change-password</code> until it\'s cleared.', th: 'ถ้ามีคุกกี้ <code class="mono">must_change_password</code> ตั้งอยู่ ทุกการนำทางจะถูกพาไปที่ <code class="mono">/change-password</code> จนกว่าคุกกี้นี้จะถูกล้าง' },
+
+    "fe.th.route": { en: "Route", th: "เส้นทาง" },
+    "fe.th.page": { en: "Page", th: "หน้า" },
+    "fe.th.access": { en: "Access", th: "สิทธิ์การเข้าถึง" },
+    "fe.th.notes": { en: "Notes", th: "หมายเหตุ" },
+    "fe.tier.public": { en: "Public", th: "สาธารณะ" },
+    "fe.tier.session": { en: "Session", th: "ต้องมีเซสชัน" },
+    "fe.tier.admin": { en: "Admin", th: "แอดมิน" },
+
+    "fe.r1.page": { en: "Home / catalog landing", th: "หน้าแรก / หน้าแคตตาล็อก" },
+    "fe.r2.page": { en: "Product listing", th: "รายการสินค้า" },
+    "fe.r3.page": { en: "Product detail", th: "รายละเอียดสินค้า" },
+    "fe.r4.page": { en: "Sign in", th: "เข้าสู่ระบบ" },
+    "fe.r5.page": { en: "Sign up", th: "สมัครสมาชิก" },
+    "fe.r6.page": { en: "Shopping cart", th: "ตะกร้าสินค้า" },
+    "fe.r7.page": { en: "Checkout", th: "ชำระเงิน" },
+    "fe.r7.note": { en: "Needs at least one saved shipping address", th: "ต้องมีที่อยู่จัดส่งที่บันทึกไว้อย่างน้อยหนึ่งรายการ" },
+    "fe.r8.page": { en: "Order history", th: "ประวัติคำสั่งซื้อ" },
+    "fe.r9.page": { en: "Order detail", th: "รายละเอียดคำสั่งซื้อ" },
+    "fe.r10.page": { en: "Profile", th: "โปรไฟล์" },
+    "fe.r11.page": { en: "Saved addresses", th: "ที่อยู่ที่บันทึกไว้" },
+    "fe.r12.page": { en: "Change password", th: "เปลี่ยนรหัสผ่าน" },
+    "fe.r12.note": { en: "Forced destination whenever must_change_password is set", th: "เป็นหน้าที่ถูกบังคับไปเสมอเมื่อมีการตั้งค่า must_change_password" },
+    "fe.r13.page": { en: "Admin dashboard", th: "แดชบอร์ดแอดมิน" },
+    "fe.r14.page": { en: "Manage products", th: "จัดการสินค้า" },
+    "fe.r15.page": { en: "Manage categories", th: "จัดการหมวดหมู่" },
+    "fe.r16.page": { en: "Manage vendors", th: "จัดการผู้ขาย" },
+    "fe.r17.page": { en: "Inventory (read-only)", th: "สต็อกสินค้า (อ่านอย่างเดียว)" },
+    "fe.r18.page": { en: "Manage purchase orders", th: "จัดการใบสั่งซื้อ" },
+    "fe.r19.page": { en: "Purchase order detail", th: "รายละเอียดใบสั่งซื้อ" },
+    "fe.r20.page": { en: "Manage users", th: "จัดการผู้ใช้งาน" },
+    "fe.r21.page": { en: "API proxy route", th: "เส้นทางพร็อกซี API" },
+    "fe.r21.note": { en: "Forwards browser requests to the backend API", th: "ส่งต่อคำขอจากเบราว์เซอร์ไปยัง backend API" },
+
+    "lc.eyebrow": { en: "05 — Order Lifecycle", th: "05 — วงจรชีวิตคำสั่งซื้อ" },
+    "lc.h2": { en: "What the Status enum actually does today", th: "สถานะ (Status) ของคำสั่งซื้อทำงานจริงอย่างไรในตอนนี้" },
+    "lc.lede": {
+      en: 'Only two transitions exist in the current code: an order is created as <code class="mono">Pending</code>, and it can be cancelled — while still <code class="mono">Pending</code> — back to <code class="mono">Cancelled</code>. <code class="mono">Confirmed</code>, <code class="mono">Shipped</code> and <code class="mono">Delivered</code> are declared on the enum but no handler, service or endpoint ever assigns them yet.',
+      th: 'ในโค้ดปัจจุบันมีการเปลี่ยนสถานะจริงแค่สองแบบ: คำสั่งซื้อถูกสร้างเป็น <code class="mono">Pending</code> และสามารถยกเลิกได้ — ขณะที่ยังเป็น <code class="mono">Pending</code> — กลายเป็น <code class="mono">Cancelled</code> ส่วน <code class="mono">Confirmed</code>, <code class="mono">Shipped</code> และ <code class="mono">Delivered</code> มีประกาศไว้ใน enum แต่ยังไม่มี handler, service หรือ endpoint ใดกำหนดค่าเหล่านี้'
+    },
+    "lc.c1.tag": { en: "Reachable today", th: "เข้าถึงได้จริงตอนนี้" },
+    "lc.c1.h3": { en: "Pending → Cancelled", th: "Pending → Cancelled" },
+    "lc.c1.p": { en: "The only two states any order can actually hold right now. Cancellation is only permitted while an order is still Pending.", th: "สองสถานะเดียวที่คำสั่งซื้อจะมีได้จริงในตอนนี้ การยกเลิกทำได้เฉพาะตอนที่คำสั่งซื้อยังอยู่ในสถานะ Pending เท่านั้น" },
+    "lc.c2.tag": { en: "Reserved, unreachable", th: "สำรองไว้ ยังเข้าไม่ถึง" },
+    "lc.c2.h3": { en: "Confirmed / Shipped / Delivered", th: "Confirmed / Shipped / Delivered" },
+    "lc.c2.p": { en: "Valid enum values with no code path that sets them — there's no admin fulfillment-tracking endpoint yet. See Known Limitations.", th: "เป็นค่า enum ที่ใช้งานได้ แต่ยังไม่มีโค้ดส่วนใดกำหนดค่านี้ — ยังไม่มี endpoint สำหรับติดตามการจัดส่งฝั่งแอดมิน ดูหัวข้อข้อจำกัด" },
+
+    "roles.eyebrow": { en: "07 — Role &amp; Permission Matrix", th: "07 — ตารางสิทธิ์การเข้าถึง" },
+    "roles.h2": { en: "Who can call what", th: "ใครเรียกใช้อะไรได้บ้าง" },
+    "roles.lede": {
+      en: 'Controller-level <code class="mono">[Authorize]</code> plus every per-action override found in the code — several "public" controllers still lock down their write actions to Admin individually.',
+      th: 'สิทธิ์ระดับคอนโทรลเลอร์จาก <code class="mono">[Authorize]</code> พร้อมข้อยกเว้นรายแอ็กชันที่พบในโค้ด — คอนโทรลเลอร์ที่ดู "สาธารณะ" หลายตัวยังล็อกแอ็กชันเขียนข้อมูลไว้ให้เฉพาะแอดมินเป็นรายแอ็กชัน'
+    },
+    "roles.th.controller": { en: "Controller", th: "คอนโทรลเลอร์" },
+    "roles.th.route": { en: "Route", th: "เส้นทาง" },
+    "roles.th.access": { en: "Controller-level access", th: "สิทธิ์ระดับคอนโทรลเลอร์" },
+    "roles.th.notes": { en: "Per-action notes", th: "หมายเหตุรายแอ็กชัน" },
+    "roles.r1.access": { en: "Public", th: "สาธารณะ" },
+    "roles.r1.note": { en: '<code class="mono">change_password</code> requires sign-in even though the controller is otherwise public', th: '<code class="mono">change_password</code> ต้องล็อกอินก่อน แม้คอนโทรลเลอร์นี้จะเปิดสาธารณะ' },
+    "roles.r2.access": { en: "Authenticated (any signed-in user)", th: "ต้องล็อกอิน (ผู้ใช้ที่ยืนยันตัวตนแล้ว)" },
+    "roles.r2.note": { en: "Self-service only — acts on the caller's own account", th: "ทำได้เฉพาะบัญชีของตนเองเท่านั้น" },
+    "roles.r3.access": { en: "Admin only", th: "แอดมินเท่านั้น" },
+    "roles.r4.access": { en: "Public (read)", th: "สาธารณะ (อ่านได้)" },
+    "roles.r4.note": { en: "Create / Update / Deactivate each require Admin individually", th: "การสร้าง/แก้ไข/ปิดการใช้งาน ต้องเป็นแอดมินในทุกแอ็กชัน" },
+    "roles.r5.access": { en: "Public (read)", th: "สาธารณะ (อ่านได้)" },
+    "roles.r5.note": { en: "Create / Update / Deactivate each require Admin individually", th: "การสร้าง/แก้ไข/ปิดการใช้งาน ต้องเป็นแอดมินในทุกแอ็กชัน" },
+    "roles.r6.access": { en: "Public (read)", th: "สาธารณะ (อ่านได้)" },
+    "roles.r6.note": { en: "Create / Update / Deactivate each require Admin individually", th: "การสร้าง/แก้ไข/ปิดการใช้งาน ต้องเป็นแอดมินในทุกแอ็กชัน" },
+    "roles.r7.access": { en: "Public", th: "สาธารณะ" },
+    "roles.r7.note": { en: "Read-only endpoints — no writes exist to restrict", th: "มีแต่ endpoint แบบอ่านอย่างเดียว ไม่มีการเขียนข้อมูลให้ต้องจำกัดสิทธิ์" },
+    "roles.r8.access": { en: "Admin only", th: "แอดมินเท่านั้น" },
+    "roles.r9.access": { en: "Authenticated", th: "ต้องล็อกอิน" },
+    "roles.r9.note": { en: "Self-service only — acts on the caller's own addresses", th: "ทำได้เฉพาะที่อยู่ของตนเองเท่านั้น" },
+    "roles.r10.access": { en: "Authenticated", th: "ต้องล็อกอิน" },
+    "roles.r10.note": { en: "Self-service only — acts on the caller's own orders", th: "ทำได้เฉพาะคำสั่งซื้อของตนเองเท่านั้น" },
+
+    "dep.eyebrow": { en: "12 — Deployment &amp; Operations", th: "12 — การติดตั้งและการใช้งาน" },
+    "dep.h2": { en: "How it runs locally", th: "การรันระบบในเครื่อง" },
+    "dep.lede": { en: "Orchestrated end-to-end by the Aspire AppHost — no manual container or migration steps.", th: "ควบคุมการรันทั้งหมดโดย Aspire AppHost — ไม่ต้องตั้งค่าคอนเทนเนอร์หรือรัน migration เอง" },
+    "dep.c1.tag": { en: "Orchestration", th: "การควบคุมการรัน" },
+    "dep.c1.h3": { en: ".NET Aspire AppHost", th: ".NET Aspire AppHost" },
+    "dep.c1.p": { en: 'Wires up a Postgres resource (<code class="mono">shoppingDb</code>), the API project (<code class="mono">shoppingonline-api</code>) referencing it, and the Next.js frontend (<code class="mono">shoppingonline-frontend</code>) referencing the API — one <code class="mono">dotnet run</code> starts all three.', th: 'เชื่อมต่อทรัพยากร Postgres (<code class="mono">shoppingDb</code>), โปรเจกต์ API (<code class="mono">shoppingonline-api</code>) ที่อ้างอิงถึงมัน และหน้าบ้าน Next.js (<code class="mono">shoppingonline-frontend</code>) ที่อ้างอิงถึง API — รันครั้งเดียวด้วย <code class="mono">dotnet run</code> ก็เริ่มทั้งสามตัว' },
+    "dep.c2.tag": { en: "Health &amp; docs", th: "Health check และเอกสาร" },
+    "dep.c2.h3": { en: "/health and /docs", th: "/health และ /docs" },
+    "dep.c2.p": { en: 'A health-check endpoint is mapped at <code class="mono">/health</code>; API documentation is served by Scalar at <code class="mono">/docs</code>, backed by the OpenAPI document. Both are development-only.', th: 'มี endpoint สำหรับตรวจสุขภาพระบบที่ <code class="mono">/health</code>; เอกสาร API ให้บริการผ่าน Scalar ที่ <code class="mono">/docs</code> โดยอิงจากเอกสาร OpenAPI ทั้งสองใช้ได้เฉพาะโหมดพัฒนา (development) เท่านั้น' },
+    "dep.c3.tag": { en: "Configuration", th: "การตั้งค่า" },
+    "dep.c3.h3": { en: "Minimal committed settings", th: "ค่าคอนฟิกที่ commit ไว้มีน้อยมาก" },
+    "dep.c3.p": { en: '<code class="mono">appsettings.json</code> commits only <code class="mono">AllowedHosts</code> — connection strings, Paseto keys and email/SMTP settings are supplied by Aspire/environment at run time, not checked into source.', th: '<code class="mono">appsettings.json</code> เก็บไว้ในซอร์สแค่ <code class="mono">AllowedHosts</code> เท่านั้น — connection string, คีย์ Paseto และการตั้งค่าอีเมล/SMTP ถูกส่งเข้ามาโดย Aspire/environment ตอนรัน ไม่ได้ถูก commit ลงซอร์ส' },
+    "dep.c4.tag": { en: "Migrations", th: "Migrations" },
+    "dep.c4.h3": { en: "Applied automatically", th: "รันอัตโนมัติ" },
+    "dep.c4.p": { en: "EF Core migrations run on startup, and a seeded admin account plus demo catalog are created on first run (see README).", th: "EF Core migrations จะรันอัตโนมัติตอนเริ่มระบบ พร้อมสร้างบัญชีแอดมินและแคตตาล็อกตัวอย่างในการรันครั้งแรก (ดู README)" },
+
+    "lim.eyebrow": { en: "13 — Known Limitations", th: "13 — ข้อจำกัดที่พบ" },
+    "lim.h2": { en: "What isn't built yet", th: "สิ่งที่ยังไม่ได้สร้าง" },
+    "lim.lede": { en: "Observed gaps in the current code — not a roadmap, just what's actually missing today.", th: "ช่องว่างที่พบจริงในโค้ดปัจจุบัน — ไม่ใช่แผนงานในอนาคต แต่เป็นสิ่งที่ยังขาดอยู่จริงตอนนี้" },
+    "lim.c1.tag": { en: "Not implemented", th: "ยังไม่มี" },
+    "lim.c1.h3": { en: "No payment or refund flow", th: "ยังไม่มีระบบชำระเงินหรือคืนเงิน" },
+    "lim.c1.p": { en: 'No payment-related file exists anywhere in the codebase, and <code class="mono">OrderStatus</code> has no <code class="mono">Refunded</code> or <code class="mono">Returned</code> state.', th: 'ไม่มีไฟล์ที่เกี่ยวข้องกับการชำระเงินอยู่ในโค้ดเลย และ <code class="mono">OrderStatus</code> ก็ไม่มีสถานะ <code class="mono">Refunded</code> หรือ <code class="mono">Returned</code>' },
+    "lim.c2.tag": { en: "Not implemented", th: "ยังไม่มี" },
+    "lim.c2.h3": { en: "Fulfillment tracking stops at Cancelled", th: "การติดตามการจัดส่งหยุดอยู่แค่ Cancelled" },
+    "lim.c2.p": { en: '<code class="mono">Confirmed</code>, <code class="mono">Shipped</code> and <code class="mono">Delivered</code> exist as enum values but no admin endpoint or handler ever sets them — see Order Lifecycle.', th: '<code class="mono">Confirmed</code>, <code class="mono">Shipped</code> และ <code class="mono">Delivered</code> มีอยู่ใน enum แต่ไม่มี endpoint หรือ handler ฝั่งแอดมินกำหนดค่าเหล่านี้เลย — ดูหัวข้อวงจรชีวิตคำสั่งซื้อ' },
+    "lim.c3.tag": { en: "Not implemented", th: "ยังไม่มี" },
+    "lim.c3.h3": { en: "No product reviews or ratings", th: "ยังไม่มีรีวิวหรือคะแนนสินค้า" },
+    "lim.c3.p": { en: "No review or rating entity, table, or controller exists in the model or API.", th: "ไม่มีเอนทิตี ตาราง หรือคอนโทรลเลอร์สำหรับรีวิว/คะแนนอยู่ในโมเดลหรือ API เลย" },
+    "lim.c4.tag": { en: "Basic only", th: "มีแบบพื้นฐานเท่านั้น" },
+    "lim.c4.h3": { en: "Catalog search is simple filtering", th: "การค้นหาแคตตาล็อกเป็นการกรองแบบพื้นฐาน" },
+    "lim.c4.p": { en: '<code class="mono">GetProductsRequest</code> filters by search text, category, vendor and active status with paging — there\'s no full-text search engine behind it.', th: '<code class="mono">GetProductsRequest</code> กรองตามข้อความค้นหา หมวดหมู่ ผู้ขาย และสถานะการใช้งาน พร้อมแบ่งหน้า — เบื้องหลังไม่มีเอนจิน full-text search รองรับ' }
+  };
+
+  function applyLang(lang) {
+    document.documentElement.setAttribute("data-lang", lang);
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n");
+      const entry = I18N[key];
+      if (entry && entry[lang]) el.innerHTML = entry[lang];
+    });
+    const btnEn = document.getElementById("lang-en");
+    const btnTh = document.getElementById("lang-th");
+    if (btnEn && btnTh) {
+      btnEn.setAttribute("aria-pressed", String(lang === "en"));
+      btnTh.setAttribute("aria-pressed", String(lang === "th"));
+    }
+    try { localStorage.setItem("shoppingonline_lang", lang); } catch (e) {}
+  }
+
+  (function initLang() {
+    let lang = "en";
+    try {
+      const saved = localStorage.getItem("shoppingonline_lang");
+      if (saved === "en" || saved === "th") {
+        lang = saved;
+      } else if (navigator.language && navigator.language.toLowerCase().startsWith("th")) {
+        lang = "th";
+      }
+    } catch (e) {
+      if (navigator.language && navigator.language.toLowerCase().startsWith("th")) lang = "th";
+    }
+    applyLang(lang);
+
+    const btnEn = document.getElementById("lang-en");
+    const btnTh = document.getElementById("lang-th");
+    if (btnEn) btnEn.addEventListener("click", function () { applyLang("en"); });
+    if (btnTh) btnTh.addEventListener("click", function () { applyLang("th"); });
+  })();
+</script>
